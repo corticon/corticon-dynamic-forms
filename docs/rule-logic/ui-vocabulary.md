@@ -1,6 +1,6 @@
 ---
-sidebar_position: 1
 title: The UI Vocabulary
+sidebar_position: 2
 ---
 
 # The UI Vocabulary: The Rule-to-UI Contract
