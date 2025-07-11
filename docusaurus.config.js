@@ -10,8 +10,8 @@ import { themes as prismThemes } from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Corticon.js Dynamic Forms',
-  tagline: 'Rule-Driven Dynamic Forms, anywhere JavaScript runs',
+  title: 'Corticon.js Dynamic Forms Solution',
+  tagline: 'Build, Deploy, and Manage Complex Forms with Unprecedented Agility',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
