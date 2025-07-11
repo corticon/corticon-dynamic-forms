@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title> Rules Driven Dynamic Forms </title>
+
+	<script src="https://unpkg.com/jsonpath-plus@5.0.2/dist/index-browser-umd.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" async defer></script>
+	<script src="https://kendo.cdn.telerik.com/2023.1.425/js/jquery.min.js"></script>
+
+	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+	<link rel="stylesheet" href="https://unpkg.com/@progress/kendo-theme-default@11.0.2/dist/default-main.css" />
+	<script src="https://kendo.cdn.telerik.com/2023.1.425/js/kendo.all.min.js"></script>
+
+	<script type="text/javascript" src="clientSideComponent/util/util.js"></script>
+	<script type="text/javascript" src="clientSideComponent/dynForm/customEvents.js"></script>
+	<script type="text/javascript" src="trace/trace.js"></script>
+	<script type="text/javascript" src="clientSideComponent/dynForm/history.js"></script>
+	<script type="text/javascript" src="clientSideComponent/dynForm/uiControlsRenderers.js"></script>
+	<script type="text/javascript" src="clientSideComponent/dynForm/stepsController.js"></script>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="client.css">
+	<link rel="stylesheet" href="clientSideComponent/dynForm/UIControlsStyles.css">
+	<link rel="stylesheet" href="trace/TraceStyles.css">
+	<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:300,400|Source+Sans+Pro:400,300' rel='stylesheet'
+		type='text/css'>
+
+	<script type="text/javascript" src="config.js"></script>
+
+	<script type="text/javascript" src="decisionServices/Homeowners/browser/decisionServiceBundle.js"></script>
+	<script type="text/javascript" src="decisionServices/JobApplication/browser/decisionServiceBundle.js"></script>
+	<script type="text/javascript" src="decisionServices/I18N/browser/decisionServiceBundle.js"></script>
+	<script type="text/javascript"
+		src="decisionServices/FilterByCountryStateCity/browser/decisionServiceBundle.js"></script>
+	<script type="text/javascript"
+		src="decisionServices/Select-Vehicle-Model-Make-Year/browser/decisionServiceBundle.js"></script>
+	<script type="text/javascript" src="decisionServices/PropertyCasualty/browser/decisionServiceBundle.js"></script>
+	<script type="text/javascript" src="decisionServices/hhsMarketplace/browser/decisionServiceBundle.js"></script>
+	<script type="text/javascript" src="decisionServices/ForeignRisk/browser/decisionServiceBundle.js"></script>
+	<script type="text/javascript" src="decisionServices/CrossingForm/browser/decisionServiceBundle.js"></script>
+
+
+	<script type="text/javascript" src="clientSideComponent/dynForm/clientSetup.js"></script>
+</head>
+
+<body>
+	<div class="sampleTitle"><i class="bi bi-file-earmark-ruled"></i>&nbsp; Rules Driven Dynamic Forms
+	</div>
+
+	<div class="page-container">
+
+		<div class="sidebar">
+			<div class="commandBar">
+				<div class="commandItem">
+					<label for="sampleSelectId" class="sampleSelectLabel">Select Sample:</label>
+					<select id="sampleSelectId" class="sampleSelect" onchange="processSwitchSample(this)">
+						<option value="0">Homeowners Insurance</option>
+						<option value="1">Job Application - I18N option1</option>
+						<option value="2">I18N with SCO - I18N option 2</option>
+						<option value="3">Select Country, then State/Province, then City (JSON path example)</option>
+						<option value="4">Select Vehicle Make, then Model, then Year (JSON path example)</option>
+						<option value="5">Property/Casualty Insurance Quote</option>
+						<option value="6">Healthcare.gov Marketplace Plan Selection</option>
+						<option value="7">Foreign Travel Risk</option>
+						<option value="8">Crossing Form</option>
+					</select>
+				</div>
+
+				<div class="commandItem" style="display: none;" id="languageContainerId">
+					<select class="sampleSelect" id="languageSelectId" onchange="processSwitchLanguage(this)"></select>
+				</div>
+
+				<div class="commandItem buttonGroup">
+					<span class="commandButton" id="startActionId" onclick="processClickStart(); return false;">
+						<a class="command" accesskey="s" title="Start Dynamic Form" href="#">
+							<span style="text-decoration: underline">Start</span>
+						</a>
+					</span>
+					<span class="commandButton commandButtonHidden" id="prevActionId"
+						onclick="processClickPrev(); return false;">
+						<a class="command" accesskey="p" title="Previous Step" href="#">
+							<span style="text-decoration: underline">Previous</span>
+						</a>
+					</span>
+					<span class="commandButton commandButtonHidden" id="nextActionId"
+						onclick="processClickNext(); return false;">
+						<a class="command" accesskey="n" title="Next Step" href="#">
+							<span style="text-decoration: underline">Next</span>
+						</a>
+					</span>
+					<span class="commandButton" id="showTraceId" onclick="processShowTrace(); return false;">
+						<a class="command" title="Show Trace" href="#">
+							<span style="text-decoration: underline">Show Trace</span>
+						</a>
+					</span>
+					<span class="commandButton commandButtonHidden" id="hideTraceId"
+						onclick="processHideTrace(); return false;">
+						<a class="command" title="Hide Trace" href="#">
+							<span style="text-decoration: underline">Hide Trace</span>
+						</a>
+					</span>
+					<span class="commandButton" id="useHtmlId" onclick="processUseHtml(); return false;">
+						<a class="command" title="Use Simple Html elements" href="#">Use Html</a>
+					</span>
+					<span class="commandButton commandButtonHidden" id="useKuiId"
+						onclick="processUseKui(); return false;">
+						<a class="command" title="Use KendoUI Components" href="#">Use KendoUI</a>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="main-content">
+			<ul id="progressbar"></ul>
+			<div id="dynUIContainerId" class="dynUIContainer">
+				<h1>Rules Driven Dynamic Forms</h1>
+				<div style="margin: 2rem;">
+					In these samples the forms are generated on the fly based on rules from Corticon.js decision
+					services. It shows how the decision service acts as the model for a generic form component.
+
+					Questions can be conditionally asked based on inputs from previous questions and from external
+					data as well.
+
+					The component can render the form with either simple Html controls or using KendoUI component
+					library.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="allTracesContainer">
+		<div class="tracePanelTitle">Decision Service (Rules) Trace Panel</div>
+		<div class="stageTraceHistory" style="overflow-x: auto; overflow-y: hidden; padding: 0.8rem;">
+			<span style="width: 20px;" id="traceHistorySummaryId"><i class="bi bi-journal-text"></i></span>
+			<span style="margin-left: 0.6rem;" id="traceHistoryId"></span>
+		</div>
+		<table width="100%">
+			<tr>
+				<td>
+					<i class="bi bi-arrow-down-right-square"></i>&nbsp;Input to Decision Service Call <a href="#"
+						title="Copy to clipboard" class="copyToClip"
+						onclick="corticon.util.copyToClipboard('#decisionServiceInputId'); return false;"><i
+							class="bi bi-clipboard-plus"></i></a>
+				</td>
+				<td>
+					<i class="bi bi-arrow-up-left-square"></i>&nbsp;Results From Decision Service Call &nbsp;<span
+						id="execTimeId"></span> <a href="#" title="Copy to clipboard" class="copyToClip"
+						onclick="corticon.util.copyToClipboard('#decisionServiceResultId'); return false;"><i
+							class="bi bi-clipboard-plus"></i></a>
+				</td>
+				<td>
+					<i class="bi bi-clipboard-data"></i>&nbsp;Accrued Form Data &nbsp;<a href="#"
+						title="Copy to clipboard" class="copyToClip"
+						onclick="corticon.util.copyToClipboard('#formDataId'); return false;"><i
+							class="bi bi-clipboard-plus"></i></a>
+				</td>
+			</tr>
+			<tr>
+				<td width="20%">
+					<textarea style="width: 100%; height: 300px;" id="decisionServiceInputId"></textarea>
+				</td>
+				<td width="40%">
+					<textarea style="width: 100%; height: 300px;" id="decisionServiceResultId"></textarea>
+				</td>
+				<td width="40%">
+					<textarea style="width: 100%; height: 300px;" id="formDataId"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+
+</html>
