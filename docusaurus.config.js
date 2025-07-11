@@ -99,32 +99,15 @@ const config = {
             ],
           },
           {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'X',
-                href: 'https://x.com/docusaurus',
-              },
-            ],
-          },
-          {
             title: 'More',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
+                label: 'Corticon.js Video Training',
+                href: 'https://www.youtube.com/playlist?list=PLy058akE_4PufGWh0MKyffsQ0eTsDJSIq',
               },
               {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'Corticon.js Documentation',
+                href: 'https://docs.progress.com/category/corticon-javascript',
               },
             ],
           },
