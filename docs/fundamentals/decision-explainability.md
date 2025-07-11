@@ -1,21 +1,31 @@
 ---
+title: Decision Explainability
 sidebar_position: 2
 ---
 
-# Decision Explainability
-A significant part of Corticon's value proposition lies in its ability to make complex decisions transparent and auditable, a concept often referred to as a "glass box" approach, in contrast to the opaque "black box" nature of many AI systems.
+# Decision Explainability with the Tracer
 
-## Rule Validation and Integrity
-The process begins before deployment. Within Corticon Studio, modelers have access to analysis tools that test the ruleset for logical errors. This feature checks for conflicts, ambiguities, hidden loops, and other logical inconsistencies, ensuring "rule integrity" at design time. This proactive validation is vital for reducing downstream errors and accelerating the delivery of reliable solutions.   
+Understanding *why* a decision was made is critical for both debugging and compliance. The Dynamic Forms solution includes a built-in **Tracer** utility that provides full visibility into the communication between the front-end and the Corticon decision service.
 
-## Rule Trace Viewer
-For debugging and runtime analysis, Corticon offers a Rule Trace Viewer. This tool provides a detailed, step-by-step log of a decision service's execution. It clearly shows the sequence in which rules were triggered, the specific data that caused them to fire, and any resulting changes to attribute values or actions performed. This eliminates the need for developers to embed cumbersome logging statements throughout their rules and provides an unambiguous view into the logic flow.  
+The Tracer appears in the bottom-right corner of the screen and can be expanded to show detailed information for each step of the form.
 
-## Rule Statements for Auditing 
-To enhance explainability, rule modelers can attach natural-language "Rule Statements" to any rule. When a rule is executed, its associated statement is captured as part of the output. This creates a human-readable audit trail that explains why a particular decision was made (e.g., "Applicant approved for Gold tier because credit score is > 750 and income is > $100,000"). This capability directly addresses the critical need for decision explainability in regulated industries like finance and healthcare.  
+## Using the Tracer
 
----
+The Tracer is enabled by default in the example runner. You can show or hide the panel by clicking on the "Trace" button. When expanded, it provides a log of every interaction with the decision service.
 
-This focus on explainability serves as a powerful strategic differentiator. While simpler form builders  offer audit trails, they are typically process-centric, tracking who signed a document and when, rather than why a specific outcome was reached. Furthermore, in an era of increasing AI adoption, the market faces a tension between the probabilistic nature of AI models and the regulatory demand for transparent, deterministic decisions. 
+Each entry in the log shows:
 
-Corticon explicitly positions itself as the solution to this problem. It provides the deterministic, repeatable, and auditable decision-making framework that can govern AI-generated insights. For example, an AI model might generate a risk score, but Corticon applies the transparent, auditable business rules to that score to make the final, compliant decision to approve or deny a loan. This makes it a crucial component in any responsible AI ecosystem.   
+* **Request Payload:** The exact JSON data that was sent from the browser to the decision service. This includes all the data the user has entered up to that point.
+* **Response Payload:** The exact JSON data that the decision service sent back. This contains the instructions for what to render next, including any new UI controls, updated data, or error messages.
+* **Execution Time:** The time it took for the decision service to execute the rules and return a response, measured in milliseconds.
+
+## Why is this important?
+
+By examining the request and response payloads, a developer or rule author can instantly answer key questions:
+
+* "Was the correct data sent to the decision service?"
+* "Did the rules execute as expected?"
+* "What data did the rules produce?"
+* "Are there any unexpected error messages?"
+
+The Tracer is an indispensable tool for rapidly diagnosing issues and verifying that your form logic is behaving exactly as intended.

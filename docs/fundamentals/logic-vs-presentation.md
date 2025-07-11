@@ -1,30 +1,24 @@
 ---
+title: Logic vs. Presentation
 sidebar_position: 1
 ---
 
-# Form Logic versus Form Presentation
+# The Separation of Concerns: Logic vs. Presentation
 
-The architecture of the Corticon platform is built upon a foundational separation of roles, providing distinct environments and responsibilities for business and technical users. This delineation is a core element of its value proposition.
+The core architectural principle of the Corticon.js Dynamic Forms solution is the **strict separation of business logic from the user interface presentation**. This means that *what* the form does is managed completely separately from *how* the form looks.
 
-This strict separation of concerns is a defining characteristic of Corticon. While most low-code platforms feature a single "builder" persona who handles both UI and logic, Corticon enforces a clear boundary. This division of responsibilities liberates IT while empowering the business. This approach delivers maximum value in environments where the business logic is volatile and changes more frequently than the application's underlying architecture or user interface. It allows the business to be more agile and responsive without being bottlenecked by IT development cycles.   
+This decoupling is what allows for unprecedented agility. Business users can change complex form behavior without any front-end code changes.
 
+## Two Roles, Two Worlds
 
-## The Business Analyst (Rule Modeler)
-This non-technical or semi-technical persona operates within **Corticon.js Studio**, a dedicated, standalone desktop environment designed for intuitive rule authoring. 
+Think of the solution as two distinct parts managed by two distinct roles:
 
-The primary interface for modeling rules is a spreadsheet-style grid, a format intentionally chosen for its familiarity to business users. The process begins with defining a **Vocabulary**,which is the data model the rules will operate on. 
+|                       | 🏢 The Business Analyst (Rule Author)                                                               | 💻 The Web Developer                                         |
+| --------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **What they control** | The form's behavior, logic, and flow.                                                              | The form's look and feel, styling, and branding.            |
+| **Primary Tool**      | Corticon Studio (a graphical modeling tool)                                                        | Code editors (e.g., VS Code)                                |
+| **Key Artifacts**     | Ruleflows (`.erf`) and Vocabularies (`.ecore`)                                                     | HTML, CSS, and JavaScript files (`.js`)                     |
+| **Core Task**         | "What happens if a user selects 'Yes' for this question?"                                          | "What font and color should this 'Yes/No' question use?"    |
+| **Result**            | A compiled **Decision Service** (`decisionServiceBundle.js`) that contains all the business logic. | A generic **HTML/JS application** that can render any form. |
 
-This vocabulary can be generated directly from standard JSON or JSON Schema files, aligning it with modern data structures. The analyst then creates **Rulesheets** where they define conditions and corresponding actions in a tabular format. Finally, they orchestrate the execution order of these rulesheets in a graphical **Ruleflow**. 
-
-This model empowers domain experts—such as policy managers, underwriters, or compliance officers—to directly author, test, and manage the business logic they are responsible for. 
-
-
-## The Developer (Integrator)
-The developer's role begins after the business analyst has modeled, tested, and packaged the rules. The developer does not interact with the rule logic itself. 
-
-Their primary artifact is a self-contained, transpiled JavaScript bundle (e.g., `decisionServiceBundle.js`) produced by Corticon Studio. Their responsibility is to integrate this decision service into the target application. 
-
-This involves building the user interface, preparing the JSON data payload that will be sent to the decision service, invoking the service's 
-`execute` function, and then processing the modified JSON payload that is returned. 
-
-To facilitate this process, Progress provides sample "wrapper" code that demonstrates how to integrate the bundle across various target platforms, including Node.js servers, AWS Lambda functions, mobile applications, and web browsers.   
+This separation means your development teams are no longer a bottleneck for business logic changes. They build the generic presentation layer once, and the business team can then create and modify endless variations of forms.
