@@ -5,22 +5,26 @@ sidebar_position: 3
 
 # Controlling Form Flow with Rules
 
-In the Dynamic Forms solution, the decision service—not the front-end—is responsible for controlling the stage-by-stage flow of the form. This is achieved by using the current stage number as a filter for your rules and explicitly setting the next stage number on the root **`UI`** entity.
+In the Dynamic Forms solution, the Decision Service—not the front-end—is responsible for controlling the stage-by-stage flow of the form. A "stage" is a unique identifier representing the user's current position in the form's state machine. This control is achieved by using the current stage number as a filter for your rules and explicitly setting the next stage number on the root **`UI`** entity.
 
 ## The Stage-Based Rulesheet Pattern
 
 A best practice is to organize your ruleflow so that each stage of your form corresponds to its own rulesheet. The key is to use the **`UI.currentStageNumber`** as a precondition to ensure only the correct rulesheet executes.
 
-### `UI.currentStageNumber` (Precondition)
-The front-end passes the current stage number in the `UI.currentStageNumber` attribute. You should use this in the **Preconditions** section of your rulesheet to ensure it only runs when the user is on the corresponding stage.
+### In the Request: `UI.currentStageNumber` (Precondition)
+
+When the front-end component makes a request to the Decision Service, it specifies which stage to execute by setting the `UI.currentStageNumber` attribute. You should use this in the **Preconditions** section of your rulesheet to ensure it only runs when the user is on the corresponding stage.
 
 **Example Rulesheet Precondition for Stage 1:**
 ![Corticon Studio screenshot](<../../static/img/stage 1.png>)
 
 `UI.currentStageNumber == 1`
 
-### `UI.nextStageNumber` (Action)
-Within your rulesheet's actions, you must set a value for **`UI.nextStageNumber`**. This attribute tells the front-end which stage to render next. If you do not set this, the form will not advance.
+### In the Response: `UI.nextStageNumber` (Action)
+
+Within your rulesheet's actions, you must set a value for **`UI.nextStageNumber`**. This attribute tells the front-end which stage to render next. When the user proceeds, the front-end will use this value as the `currentStageNumber` for the next request. If you do not set this attribute, the form will not advance.
+
+The Decision Service response may also contain `currentStageNumber` and an optional `currentStageDescription`. These are for troubleshooting and debugging purposes; the front-end does not use them for navigation.
 
 ## Example: A Two-Stage Form
 

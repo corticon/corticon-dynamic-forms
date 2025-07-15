@@ -14,6 +14,15 @@ The `uiControlsRenderers.js` file is responsible for translating the JSON payloa
 3.  The `stepsController` passes this array to the `render()` function in `uiControlsRenderers.js`.
 4.  The `render()` function iterates through each control definition and, based on its `type` (e.g., "Text", "DropDown", "CheckBox"), calls a specific private render function (e.g., `_renderText`, `_renderDropDown`) to generate the appropriate HTML.
 
+## Categories of UI Controls
+
+When implementing rendering logic, it is helpful to think of controls in the following categories:
+
+* **Simple Controls:** These map to a single, primitive HTML element. A `Text` control becomes an `<input type="text">`, and a `MultipleChoices` control can be rendered as a `<select>` dropdown. Each simple control corresponds to a single piece of data.
+* **Multiple Instance Controls:** These are used when the number of inputs for a specific field is not known in advance (e.g., asking for the names of all children). The user interface should allow for dynamically adding more input fields, and the resulting data is stored as an array.
+* **Complex Controls:** These controls render a group of related inputs for a single conceptual item. For example, an expense entry might require a dropdown for the expense type and a text input for the amount. Complex controls often need to be multi-instance as well, allowing the user to add multiple expense entries. The data for each entry is typically stored as an object within a larger array.
+* **Data-Sourced Controls:** Any control that presents a list of choices (like a dropdown) can be populated from an external REST service. The Decision Service specifies the URL in the `dataSource` attribute of the control definition. Your rendering logic must be able to fetch data from this URL and populate the control's options.
+
 ## How to Customize an Existing Control
 
 To modify an existing control, find its corresponding `_render` function within `uiControlsRenderers.js`.

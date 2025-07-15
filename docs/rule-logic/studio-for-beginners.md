@@ -7,6 +7,12 @@ sidebar_position: 1
 
 Welcome, rule authors! If you are new to Corticon.js Studio, this page will introduce you to the core concepts you'll need to understand to build the logic for dynamic forms.
 
+### The Challenge of Rule-Driven Forms
+
+Creating a form that changes based on user input requires complex conditional logic. For example, "If the user is applying for a loan over $50,000 AND has been at their job for less than a year, then ask for a co-signer." As more of these conditions are added, managing them in standard programming code becomes incredibly difficult, error-prone, and slow to change.
+
+Corticon.js Studio was designed to solve this problem by allowing you to define these complex business rules visually, without writing code.
+
 ### What is Corticon.js Studio?
 
 **Corticon.js Studio** is a graphical, desktop tool for modeling, analyzing, and testing business rules. Instead of writing code, you will use a spreadsheet-like interface to define the "if-then" logic that powers your forms. The output of your work in Studio is a **Decision Service**—a self-contained bundle of logic that the front-end application can execute.

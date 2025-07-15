@@ -14,6 +14,15 @@ The `stepsController.js` is the central coordinator for the dynamic multi-step f
 * **Validation:** Initiates client-side validation for the current step's fields before allowing the user to proceed.
 * **Data Interaction:** Serves as the primary liaison between the UI and the Corticon decision service. It packages form data, sends it for processing, and uses the response to dynamically adjust the form.
 
+## State Management in Detail
+
+The Decision Service itself is stateless. Therefore, the `stepsController` is solely responsible for maintaining the state of the form as the user progresses. It accomplishes this by:
+
+* **Tracking the Current Stage:** The controller maintains a variable for the `currentStageNumber`. When a user proceeds, the controller uses the `nextStageNumber` from the Decision Service's response to update this value for the subsequent request.
+* **Aggregating User Data:** The controller maintains an object that stores all data collected from the user. When a rule author defines a user interface control, they also specify a `fieldName` where the response should be stored. The controller uses this `fieldName` to save the user's input into the main data object.
+* **Handling the Data Path:** The Decision Service can specify a `pathToData` to instruct the controller to store responses within a specific nested object in the main data object. The controller maintains the current `pathToData` value across stages unless a new one is provided.
+* **Finalizing Data:** When the Decision Service returns `done: true`, the controller knows the form is complete. It is then responsible for passing the final, aggregated data object to another function or process for submission.
+
 ## Key Functions
 
 | Function         | Description                                                                                                                                                                                                 |
