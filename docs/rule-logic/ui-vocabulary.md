@@ -47,21 +47,22 @@ Represents an individual form element like an input field, text display, or butt
 
 #### Common `UIControl` Attributes
 
-| Attribute         | Data Type               | Description                                                                                                                                              |
-| ----------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`            | String                  | The specific type of UI Control to render. This choice determines which other attributes are required or optional. The various types are detailed below. |
-| `fieldName`       | String                  | **Crucial for data binding.** Links the control's value to an attribute within the entity defined by `UI.pathToData`.                                    |
-| `id`              | String                  | A required, unique identifier for the control within its container.                                                                                      |
-| `label`           | String                  | The text displayed as the label for the UI control.                                                                                                      |
-| `value`           | String, Number, Boolean | Provides a default value for input controls. For read-only controls, this holds the text to display.                                                     |
-| `labelPosition`   | String                  | Optionally specifies where to place the label relative to the control (e.g., `'Above'`, `'Side'`).                                                       |
-| `dataSource`      | URL (String)            | A URL to a REST endpoint used to dynamically populate choice-based controls.                                                                             |
-| `emphasize`       | Boolean                 | If `true`, instructs the front-end to render the `label` with emphasis (e.g., bold).                                                                     |
-| `min` / `max`     | Number                  | Specifies the minimum/maximum numeric value for a `Number` control or character length for a `TextArea`.                                                 |
-| `minDT` / `maxDT` | Date (String)           | Specifies the minimum/maximum selectable date for `DateTime` controls (e.g., `'YYYY-MM-DD'`).                                                            |
-| `sortOptions`     | String                  | Optionally instructs the front-end to sort options (`'A to Z'` or `'Z to A'`) for choice-based controls.                                                 |
-| `tooltip`         | String                  | Optional text to display as a tooltip when the user hovers over the control.                                                                             |
-| (Other)           | Varies                  | Certain control types have unique attributes, such as `rows` for `TextArea` or `showTime` for `DateTime`.                                                |
+| Attribute                  | Data Type               | Description                                                                                                                                              |
+| -------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`                     | String                  | The specific type of UI Control to render. This choice determines which other attributes are required or optional. The various types are detailed below. |
+| `fieldName`                | String                  | **Crucial for data binding.** Links the control's value to an attribute within the entity defined by `UI.pathToData`.                                    |
+| `id`                       | String                  | A required, unique identifier for the control within its container.                                                                                      |
+| `label`                    | String                  | The text displayed as the label for the UI control.                                                                                                      |
+| `value`                    | String, Number, Boolean | Provides a default value for input controls. For read-only controls, this holds the text to display.                                                     |
+| `labelPosition`            | String                  | Optionally specifies where to place the label relative to the control (e.g., `'Above'`, `'Side'`).                                                       |
+| `dataSource`               | URL (String)            | A URL to a REST endpoint used to dynamically populate choice-based controls.                                                                             |
+| `emphasize`                | Boolean                 | If `true`, instructs the front-end to render the `label` with emphasis (e.g., bold).                                                                     |
+| `min` / `max`              | Number                  | Specifies the minimum/maximum numeric value for a `Number` control or character length for a `TextArea`.                                                 |
+| `minDT` / `maxDT`          | Date (String)           | Specifies the minimum/maximum selectable date for `DateTime` controls (e.g., `'YYYY-MM-DD'`).                                                            |
+| `sortOptions`              | String                  | Optionally instructs the front-end to sort options (`'A to Z'` or `'Z to A'`) for choice-based controls.                                                 |
+| `tooltip`                  | String                  | Optional text to display as a tooltip when the user hovers over the control.                                                                             |
+| `triggeredByControlWithId` | String                  | The `id` of another control that must be interacted with before this control becomes visible.                                                            |
+| `triggeredWhenSelection`   | String                  | The specific value that must be selected in the triggering control for this control to become visible.                                                   |
 
 #### UIControl Types
 
