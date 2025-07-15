@@ -11,7 +11,7 @@ The embedded application below is a single HTML page. It is not specific to any 
 **Use the dropdown menu within the application to select and run different decision services.** Notice how the entire form's steps, fields, labels, and validation rules change dynamically based on your selection. This demonstrates how business logic, defined in Corticon, dictates the user experience rendered by the generic front-end.
 
 <iframe
-  src="/corticon-forms-example/index.html"
+  src={useBaseUrl('/corticon-forms-example/index.html')}
   width="100%"
   height="700px"
   style={{ border: '1px solid #ccc', borderRadius: '8px' }}
