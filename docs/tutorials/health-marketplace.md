@@ -3,7 +3,69 @@ title: "Tutorial 4: Health Marketplace Application"
 sidebar_position: 4
 ---
 
-# Health Marketplace Application
+# Tutorial 4: Health Marketplace Application
+
+## Prerequisites: Getting the Project Files
+
+Before you begin, this tutorial requires you to download two key assets from our GitHub repository:
+
+1.  **The "Form Template" Rule Project**: The foundational project for creating dynamic forms.
+2.  **The Front-End Renderer**: The HTML and JavaScript files needed to display the forms.
+
+Follow these two steps to get everything you need.
+
+### Step 1: Import the Rule Projects into Studio
+
+We use a PowerShell script to automatically find and install all the sample rule projects, including the essential **"Form Template,"** into your Corticon.js Studio.
+
+1.  **Navigate to the `sample-projects` Directory**:
+    * Go to: [https://github.com/corticon/dynamic-forms/tree/main/sample-projects](https://github.com/corticon/dynamic-forms/tree/main/sample-projects)
+
+2.  **Download the Import Script**:
+    * In the file list, find and click on `Import-CorticonSamples.ps1`.
+    * On the script's page, click the **Download raw file** button (the icon with a downward arrow).
+    * Save the script to a convenient location, like your Desktop.
+
+3.  **Run the Script**:
+    * Open a PowerShell window, navigate to where you saved the file, and run it:
+        ```powershell
+        .\Import-CorticonSamples.ps1
+        ```
+    * This script will temporarily clone the `dynamic-forms` repository in the background, find all the samples, and install them into your Corticon.js Studio.
+
+4.  **Restart Corticon.js Studio**:
+    * After the script finishes, restart the studio. Go to **Help -> Samples** to find the **"Form Template"** project.
+
+---
+
+### Step 2: Get the Front-End Files
+
+The front-end rendering application is in the `front-end-files` directory. We will use the `downgit` tool to download just this specific folder.
+
+1.  **Download the Directory**:
+    * Click this direct link to download the `front-end-files` directory as a ZIP file:
+    * **[Download `front-end-files` using downgit](https://downgit.github.io/#/home?url=https://github.com/corticon/dynamic-forms/tree/main/front-end-files)**
+    * This will download a file named `front-end-files.zip`.
+
+2.  **Unzip the Files**:
+    * Create a main project folder on your computer for this work (e.g., `C:\corticon-tutorial`).
+    * Unzip the `front-end-files.zip` directly into that folder. Your folder structure should now look like this:
+        ```
+        C:\corticon-tutorial\
+        └── front-end-files\
+            ├── clientSideComponent\
+            ├── decisionServices\
+            ├── trace\
+            └── index.html
+            └── ... (and other files)
+        ```
+
+3.  **Important Note for Later**:
+    * As you proceed through the tutorials, you will generate new Decision Services from Corticon.js Studio. **You must save these into the `decisionServices` subfolder.** For example: `C:\corticon-tutorial\front-end-files\decisionServices\`. This ensures the front-end application can find and load them.
+
+---
+
+## Tutorial: Building the Health Marketplace Application
 
 This tutorial guides you through building a Health Marketplace insurance application. It's our most advanced project yet and will teach you how to handle applications for a household with multiple members, a very common requirement in real-world forms.
 
@@ -20,9 +82,10 @@ This tutorial guides you through building a Health Marketplace insurance applica
 
 This form has the most detailed data model so far, involving multiple related entities.
 
-1.  In Corticon.js Studio, create a **New > Vocabulary** and name it `MarketplaceVocabulary.ecore`.
-2.  Create a **New Entity** named **`household`**.
-3.  Add the following attributes to the `household` entity:
+1.  In Corticon.js Studio, open the **Form Template** project you imported earlier.
+2.  In the Project Explorer, open the `Rule Vocabulary.ecore` file.
+3.  Create a **New Entity** named **`household`**.
+4.  Add the following attributes to the `household` entity:
 
 | Attribute Name      | Data Type |
 | :------------------ | :-------- |
@@ -33,8 +96,8 @@ This form has the most detailed data model so far, involving multiple related en
 | `totalExpenses`     | Decimal   |
 | `eligibility`       | String    |
 
-4.  Next, create another **New Entity** named **`member`**.
-5.  Add the following attributes to the `member` entity:
+5.  Next, create another **New Entity** named **`member`**.
+6.  Add the following attributes to the `member` entity:
 
 | Attribute Name | Data Type |
 | :------------- | :-------- |
@@ -42,8 +105,8 @@ This form has the most detailed data model so far, involving multiple related en
 | `dob`          | Date      |
 | `gender`       | String    |
 
-6.  Now, we need to create the relationship between them. **Right-click the `household` entity, select New > Association, and target the `member` entity**. Name the association `members`. This tells Corticon that a `household` can contain multiple `members`.
-7.  Save your vocabulary file.
+7.  Now, we need to create the relationship between them. **Right-click the `household` entity, select New > Association, and target the `member` entity**. Name the association `members`. This tells Corticon that a `household` can contain multiple `members`.
+8.  Save your vocabulary file.
 
 ---
 

@@ -5,7 +5,70 @@ sidebar_position: 5
 
 # Cascading Country-State-City Selector
 
-In this final hands-on tutorial, you will build a three-level cascading dropdown selector for Country, State, and City. This is a common requirement in applications that collect address information and is the definitive example of how to chain filtered, data-driven controls.
+## Prerequisites: Getting the Project Files
+
+Before you begin, this tutorial requires you to download two key assets from our GitHub repository:
+
+1.  **The "Form Template" Rule Project**: The foundational project for creating dynamic forms.
+2.  **The Front-End Renderer**: The HTML and JavaScript files needed to display the forms.
+
+Follow these two steps to get everything you need.
+
+### Step 1: Import the Rule Projects into Studio
+
+We use a PowerShell script to automatically find and install all the sample rule projects, including the essential **"Form Template,"** into your Corticon.js Studio.
+
+1.  **Navigate to the `sample-projects` Directory**:
+    * Go to: [https://github.com/corticon/dynamic-forms/tree/main/sample-projects](https://github.com/corticon/dynamic-forms/tree/main/sample-projects)
+
+2.  **Download the Import Script**:
+    * In the file list, find and click on `Import-CorticonSamples.ps1`.
+    * On the script's page, click the **Download raw file** button (the icon with a downward arrow).
+    * Save the script to a convenient location, like your Desktop.
+
+
+3.  **Run the Script**:
+    * Open a PowerShell window, navigate to where you saved the file, and run it:
+        ```powershell
+        .\Import-CorticonSamples.ps1
+        ```
+    * This script will temporarily clone the `dynamic-forms` repository in the background, find all the samples, and install them into your Corticon.js Studio.
+
+4.  **Restart Corticon.js Studio**:
+    * After the script finishes, restart the studio. Go to **Help -> Samples** to find the **"Form Template"** project.
+
+---
+
+### Step 2: Get the Front-End Files
+
+The front-end rendering application is in the `front-end-files` directory. We will use the `downgit` tool to download just this specific folder.
+
+1.  **Download the Directory**:
+    * Click this direct link to download the `front-end-files` directory as a ZIP file:
+    * **[Download `front-end-files` using downgit](https://downgit.github.io/#/home?url=https://github.com/corticon/dynamic-forms/tree/main/front-end-files)**
+    * This will download a file named `front-end-files.zip`.
+
+2.  **Unzip the Files**:
+    * Create a main project folder on your computer for this work (e.g., `C:\corticon-tutorial`).
+    * Unzip the `front-end-files.zip` directly into that folder. Your folder structure should now look like this:
+        ```
+        C:\corticon-tutorial\
+        └── front-end-files\
+            ├── clientSideComponent\
+            ├── decisionServices\
+            ├── trace\
+            └── index.html
+            └── ... (and other files)
+        ```
+
+3.  **Important Note for Later**:
+    * As you proceed through the tutorials, you will generate new Decision Services from Corticon.js Studio. **You must save these into the `decisionServices` subfolder.** For example: `C:\corticon-tutorial\front-end-files\decisionServices\`. This ensures the front-end application can find and load them.
+
+---
+
+## Tutorial: Building the Cascading Selector
+
+In this final hands-on tutorial, you will build a three-level cascading dropdown selector for Country, State, and City using the **Form Template**. This is a common requirement in applications that collect address information and is the definitive example of how to chain filtered, data-driven controls.
 
 **What You Will Learn:**
 
@@ -19,9 +82,10 @@ In this final hands-on tutorial, you will build a three-level cascading dropdown
 
 The data model for this form is simple, as we only need to store the final user selections.
 
-1.  In Corticon.js Studio, create a **New > Vocabulary** and name it `LocationVocabulary.ecore`.
-2.  Create a **New Entity** named `Location`.
-3.  Add the following attributes to the `Location` entity:
+1.  In Corticon.js Studio, open the **Form Template** project you imported earlier.
+2.  In the Project Explorer, open the `Rule Vocabulary.ecore` file.
+3.  Create a **New Entity** named `Location`.
+4.  Add the following attributes to the `Location` entity:
 
 | Attribute Name | Data Type |
 | :------------- | :-------- |
@@ -29,7 +93,7 @@ The data model for this form is simple, as we only need to store the final user 
 | `state`        | String    |
 | `city`         | String    |
 
-4.  Save your vocabulary file.
+5.  Save your vocabulary file.
 
 ---
 
@@ -71,7 +135,7 @@ The options in this dropdown will be filtered based on the country chosen in Sta
         * `dataValueField` = `'name'`
         * `dataTextField` = `'name'`
         * `pathToOptionsArray` = `$.countries[?(@.country == '` + Location.country + `')].states[*]`
-            * This JSONPath finds the country object that matches the user's selection (`Location.country`) and then drills down to get the list of its `states`.
+        * This JSONPath finds the country object that matches the user's selection (`Location.country`) and then drills down to get the list of its `states`.
     * **Set Next Stage:** `UI.nextStageNumber` = `2`
 
 ### Stage 2: Select City
@@ -91,7 +155,7 @@ This final dropdown is filtered by both the previously selected country and stat
         * `dataValueField` = `'name'`
         * `dataTextField` = `'name'`
         * `pathToOptionsArray` = `$.countries[?(@.country == '` + Location.country + `')].states[?(@.name == '` + Location.state + `')].cities[*]`
-            * This path is even more specific, finding the correct country, then the correct state, and finally retrieving the list of its `cities`.
+        * This path is even more specific, finding the correct country, then the correct state, and finally retrieving the list of its `cities`.
     * **End the Form:** `UI.done` = `true`.
 
 ---
