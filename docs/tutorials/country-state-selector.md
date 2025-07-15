@@ -92,7 +92,6 @@ The data model for this form is simple, as we only need to store the final user 
    
 6.  For the source entity name, keep 'Data.Data' for the the target entity name, select 'Data.Location', and click the 'One' button beneath it. Then, change 'Navigability' to 'Data.Data->Data.Location'.
 
-![](../../static/img/locationPathToData.png)
 
 
 7.  Add the following attributes to the `Location` entity:

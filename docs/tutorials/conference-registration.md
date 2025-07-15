@@ -95,7 +95,6 @@ First, we need to define the data model for our form. This is where we tell Cort
    
 6.  For the source entity name, keep 'Data.Data' for the the target entity name, select 'Data.Registrant', and click the 'One' button beneath it. Then, change 'Navigability' to 'Data.Data->Data.Registrant'.
 
-![](../../static/img/registrantPathToData.png)
 
 7. Now, add attributes to the `Registrant` entity. Right-click the `Registrant` entity, select **Add New Attribute**, and create the following attributes one by one:
 

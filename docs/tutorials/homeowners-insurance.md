@@ -91,7 +91,6 @@ First, we will define the data model for our insurance application.
    
 5.  For the source entity name, keep 'Data.Data' for the the target entity name, select 'Data.Homeowners', and click the 'One' button beneath it. Then, change 'Navigability' to 'Data.Data->Data.Homeowners'.
 
-![](../../static/img/homeownersPathToData.png)
 
 6.  Now, add the following attributes to your new `Homeowners` entity. This will store all the information about the applicant, their property, and the final quote.
 

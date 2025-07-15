@@ -93,7 +93,6 @@ First, we'll define the data model. We need an entity to hold the user's answers
    
 6.  For the source entity name, keep 'Data.Data' for the the target entity name, select 'Data.T2DB', and click the 'One' button beneath it. Then, change 'Navigability' to 'Data.Data->Data.T2DB'.
 
-![](../../static/img/T2DBPathToData.png)
 7.  Add the following attributes to the `T2DB` entity. These will store the user's answers and the results of the calculation.
 
 | Attribute Name        | Data Type |
