@@ -2,6 +2,8 @@
 title: Live Demonstration
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 # Live Demonstration: One Front-End, Many Forms
 
 A core principle of the Corticon.js Dynamic Forms solution is the **separation of logic from presentation**. This means you can build a single front-end application that can render *any* number of different forms without changing the front-end code.
