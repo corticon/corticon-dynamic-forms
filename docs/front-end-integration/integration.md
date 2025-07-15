@@ -13,7 +13,7 @@ The client-side logic is primarily orchestrated by three files:
 
 1.  **`index.html` (The Host Page):** This is the main HTML file that contains the containers for the dynamic form. It's responsible for loading all the necessary CSS and JavaScript files.
 
-2.  **`clientSetup.js` (The Initializer):** This script is the entry point for the form. It waits for the page to load, then initializes the `stepsController` and sets up the necessary event listeners to kick off the dynamic form process.
+2.  **`clientSetup.js` (The Initializer):** This script is the entry point for the form. It waits for the page to load, then initializes the `stepsController` and sets up the necessary event listeners to kick off the dynamic form process. It also handles higher-level logic such as switching between different sample forms and restoring user interface state from local storage.
 
 3.  **`stepsController.js` (The Controller):** As the "brain" of the form, this module is initialized by `clientSetup.js`. It manages the form's state, communicates with the Corticon decision service, and orchestrates the rendering of UI controls.
 
