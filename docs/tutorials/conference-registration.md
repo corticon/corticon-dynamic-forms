@@ -88,8 +88,16 @@ First, we need to define the data model for our form. This is where we tell Cort
 1.  In Corticon.js Studio, open the **Form Template** project you imported earlier.
 2.  In the Project Explorer, open the `Rule Vocabulary.ecore` file.
 3.  You will see the standard `UI`, `Container`, `UIControl`, and `Option` entities. We need to add one more to store our registrant's information.
-4.  Right-click in the vocabulary editor and select **Add New Entity**. Name it **`Registrant`**.
-5.  Now, add attributes to the `Registrant` entity. Right-click the `Registrant` entity, select **Add New Attribute**, and create the following attributes one by one:
+4.  Expand the 'Data' folder in the rule vocabulary. Double click on the entity 'renameToYourPathToData', and enter **`Registrant`**.
+5. Right click on the entity called 'Data' and click 'Add Association'.
+   
+      ![](../../static/img/pathToData1.png)
+   
+6.  For the source entity name, keep 'Data.Data' for the the target entity name, select 'Data.Registrant', and click the 'One' button beneath it. Then, change 'Navigability' to 'Data.Data->Data.Registrant'.
+
+![](../../static/img/registrantPathToData.png)
+
+7. Now, add attributes to the `Registrant` entity. Right-click the `Registrant` entity, select **Add New Attribute**, and create the following attributes one by one:
 
 | Attribute Name             | Data Type |
 | -------------------------- | --------- |

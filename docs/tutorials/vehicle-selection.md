@@ -83,7 +83,14 @@ First, we'll define the data model. This form only needs to store the user's fin
 
 1.  In Corticon.js Studio, open the **Form Template** project you imported earlier.
 2.  In the Project Explorer, open the `Rule Vocabulary.ecore` file.
-3.  Create a **New Entity** named `AutoQuote`.
+3. Expand the 'Data' folder in the rule vocabulary. Double click on the entity 'renameToYourPathToData', and enter **`AutoQuote`**.
+4. Right click on the entity called 'Data' and click 'Add Association'.
+   
+      ![](../../static/img/pathToData1.png)
+   
+5.  For the source entity name, keep 'Data.Data' for the the target entity name, select 'Data.AutoQuote', and click the 'One' button beneath it. Then, change 'Navigability' to 'Data.Data->Data.AutoQuote'.
+
+![](../../static/img/autoQuotePath.png)
 4.  Add the following attributes to the `AutoQuote` entity:
 
 | Attribute Name  | Data Type |

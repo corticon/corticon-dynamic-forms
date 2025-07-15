@@ -84,8 +84,16 @@ First, we will define the data model for our insurance application.
 
 1.  In Corticon.js Studio, open the **Form Template** project you imported earlier.
 2.  In the Project Explorer, open the `Rule Vocabulary.ecore` file.
-3.  In the vocabulary editor, right-click and select **Add New Entity**. Name it **`Homeowners`**.
-4.  Now, add the following attributes to your new `Homeowners` entity. This will store all the information about the applicant, their property, and the final quote.
+3. Expand the 'Data' folder in the rule vocabulary. Double click on the entity 'renameToYourPathToData', and enter **`Homeowners`**.
+4. Right click on the entity called 'Data' and click 'Add Association'.
+   
+      ![](../../static/img/pathToData1.png)
+   
+5.  For the source entity name, keep 'Data.Data' for the the target entity name, select 'Data.Homeowners', and click the 'One' button beneath it. Then, change 'Navigability' to 'Data.Data->Data.Homeowners'.
+
+![](../../static/img/homeownersPathToData.png)
+
+6.  Now, add the following attributes to your new `Homeowners` entity. This will store all the information about the applicant, their property, and the final quote.
 
 | Attribute Name   | Data Type |
 | ---------------- | --------- |
@@ -105,7 +113,7 @@ First, we will define the data model for our insurance application.
 | `deductible`     | Decimal   |
 | `premium`        | Decimal   |
 
-5.  Save your vocabulary file.
+7.  Save your vocabulary file.
 
 ---
 

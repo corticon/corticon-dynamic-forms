@@ -85,8 +85,16 @@ First, we'll define the data model. We need an entity to hold the user's answers
 
 1.  In Corticon.js Studio, open the **Form Template** project you imported earlier.
 2.  In the Project Explorer, open the `Rule Vocabulary.ecore` file.
-3.  Create a **New Entity** named **`T2DB`** (for Type 2 Diabetes).
-4.  Add the following attributes to the `T2DB` entity. These will store the user's answers and the results of the calculation.
+3.  You will see the standard `UI`, `Container`, `UIControl`, and `Option` entities. We need to add one more to store our registrant's information.
+4. Expand the 'Data' folder in the rule vocabulary. Double click on the entity 'renameToYourPathToData', and enter **`T2DB`**.
+5. Right click on the entity called 'Data' and click 'Add Association'.
+   
+      ![](../../static/img/pathToData1.png)
+   
+6.  For the source entity name, keep 'Data.Data' for the the target entity name, select 'Data.T2DB', and click the 'One' button beneath it. Then, change 'Navigability' to 'Data.Data->Data.T2DB'.
+
+![](../../static/img/T2DBPathToData.png)
+7.  Add the following attributes to the `T2DB` entity. These will store the user's answers and the results of the calculation.
 
 | Attribute Name        | Data Type |
 | :-------------------- | :-------- |
@@ -100,7 +108,7 @@ First, we'll define the data model. We need an entity to hold the user's answers
 | `score`               | Integer   |
 | `risk`                | String    |
 
-5.  Save your vocabulary file.
+8.  Save your vocabulary file.
 
 ---
 

@@ -82,10 +82,20 @@ In this final hands-on tutorial, you will build a three-level cascading dropdown
 
 The data model for this form is simple, as we only need to store the final user selections.
 
-1.  In Corticon.js Studio, open the **Form Template** project you imported earlier.
-2.  In the Project Explorer, open the `Rule Vocabulary.ecore` file.
-3.  Create a **New Entity** named `Location`.
-4.  Add the following attributes to the `Location` entity:
+1.  In Corticon.js Studio, open the **Form Template** project you imported earlier.
+2.  In the Project Explorer, open the `Rule Vocabulary.ecore` file.
+3.  You will see the standard `UI`, `Container`, `UIControl`, and `Option` entities. We need to add one more to store our registrant's information.
+4.  Expand the 'Data' folder in the rule vocabulary. Double click on the entity 'renameToYourPathToData', and enter **`Location`**.
+5. Right click on the entity called 'Data' and click 'Add Association'.
+   
+      ![](../../static/img/pathToData1.png)
+   
+6.  For the source entity name, keep 'Data.Data' for the the target entity name, select 'Data.Location', and click the 'One' button beneath it. Then, change 'Navigability' to 'Data.Data->Data.Location'.
+
+![](../../static/img/locationPathToData.png)
+
+
+7.  Add the following attributes to the `Location` entity:
 
 | Attribute Name | Data Type |
 | :------------- | :-------- |
@@ -93,7 +103,7 @@ The data model for this form is simple, as we only need to store the final user 
 | `state`        | String    |
 | `city`         | String    |
 
-5.  Save your vocabulary file.
+8.  Save your vocabulary file.
 
 ---
 
