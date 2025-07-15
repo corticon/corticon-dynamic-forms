@@ -5,6 +5,68 @@ sidebar_position: 2
 
 # Homeowner's Insurance Application
 
+## Prerequisites: Getting the Project Files
+
+Before you begin, this tutorial requires you to download two key assets from our GitHub repository:
+
+1.  **The "Form Template" Rule Project**: The foundational project for creating dynamic forms.
+2.  **The Front-End Renderer**: The HTML and JavaScript files needed to display the forms.
+
+Follow these two steps to get everything you need.
+
+### Step 1: Import the Rule Projects into Studio
+
+We use a PowerShell script to automatically find and install all the sample rule projects, including the essential **"Form Template,"** into your Corticon.js Studio.
+
+1.  **Navigate to the `sample-projects` Directory**:
+    * Go to: [https://github.com/corticon/dynamic-forms/tree/main/sample-projects](https://github.com/corticon/dynamic-forms/tree/main/sample-projects)
+
+2.  **Download the Import Script**:
+    * In the file list, find and click on `Import-CorticonSamples.ps1`.
+    * On the script's page, click the **Download raw file** button (the icon with a downward arrow).
+    * Save the script to a convenient location, like your Desktop.
+
+3.  **Run the Script**:
+    * Open a PowerShell window, navigate to where you saved the file, and run it:
+        ```powershell
+        .\Import-CorticonSamples.ps1
+        ```
+    * This script will temporarily clone the `dynamic-forms` repository in the background, find all the samples, and install them into your Corticon.js Studio.
+
+4.  **Restart Corticon.js Studio**:
+    * After the script finishes, restart the studio. Go to **Help -> Samples** to find the **"Form Template"** project.
+
+---
+
+### Step 2: Get the Front-End Files
+
+The front-end rendering application is in the `front-end-files` directory. We will use the `downgit` tool to download just this specific folder.
+
+1.  **Download the Directory**:
+    * Click this direct link to download the `front-end-files` directory as a ZIP file:
+    * **[Download `front-end-files` using downgit](https://downgit.github.io/#/home?url=https://github.com/corticon/dynamic-forms/tree/main/front-end-files)**
+    * This will download a file named `front-end-files.zip`.
+
+2.  **Unzip the Files**:
+    * Create a main project folder on your computer for this work (e.g., `C:\corticon-tutorial`).
+    * Unzip the `front-end-files.zip` directly into that folder. Your folder structure should now look like this:
+        ```
+        C:\corticon-tutorial\
+        └── front-end-files\
+            ├── clientSideComponent\
+            ├── decisionServices\
+            ├── trace\
+            └── index.html
+            └── ... (and other files)
+        ```
+
+3.  **Important Note for Later**:
+    * As you proceed through the tutorials, you will generate new Decision Services from Corticon.js Studio. **You must save these into the `decisionServices` subfolder.** For example: `C:\corticon-tutorial\front-end-files\decisionServices\`. This ensures the front-end application can find and load them.
+
+---
+
+## Tutorial: Building the Homeowner's Insurance Application
+
 In this tutorial, you will build a practical, multi-stage application form for a homeowner's insurance policy. This project is a perfect example of how dynamic forms can handle complex data collection and even perform calculations.
 
 **What You Will Learn:**
@@ -20,9 +82,10 @@ In this tutorial, you will build a practical, multi-stage application form for a
 
 First, we will define the data model for our insurance application.
 
-1.  In Corticon.js Studio, create a **New > Vocabulary** and name it `HomeownersVocabulary.ecore`.
-2.  In the vocabulary editor, right-click and select **Add New Entity**. Name it **`Homeowners`**.
-3.  Now, add the following attributes to your new `Homeowners` entity. This will store all the information about the applicant, their property, and the final quote.
+1.  In Corticon.js Studio, open the **Form Template** project you imported earlier.
+2.  In the Project Explorer, open the `Rule Vocabulary.ecore` file.
+3.  In the vocabulary editor, right-click and select **Add New Entity**. Name it **`Homeowners`**.
+4.  Now, add the following attributes to your new `Homeowners` entity. This will store all the information about the applicant, their property, and the final quote.
 
 | Attribute Name   | Data Type |
 | ---------------- | --------- |
@@ -42,7 +105,7 @@ First, we will define the data model for our insurance application.
 | `deductible`     | Decimal   |
 | `premium`        | Decimal   |
 
-4.  Save your vocabulary file.
+5.  Save your vocabulary file.
 
 ---
 

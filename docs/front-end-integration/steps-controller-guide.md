@@ -28,4 +28,4 @@ The `stepsController.js` is the central coordinator for the dynamic multi-step f
 The `stepsController` works closely with other components:
 
 * **`uiControlsRenderers.js`:** The controller **commands** the renderer. It receives a payload from the decision service and passes the UI definitions to the renderer to create the HTML.
-* **Corticon Decision Service:** This is the controller's source of truth. It sends the current form data and receives instructions on what to display next, including new fields, updated dropdowns, or changes in field visibility.
+* **`decisionServiceBundle.js`:** This is the controller's source of truth. It sends the current form data and receives instructions on what to display next, including new fields, updated dropdowns, or changes in field visibility.

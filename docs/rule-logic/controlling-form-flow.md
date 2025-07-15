@@ -15,7 +15,8 @@ A best practice is to organize your ruleflow so that each stage of your form cor
 The front-end passes the current stage number in the `UI.currentStageNumber` attribute. You should use this in the **Preconditions** section of your rulesheet to ensure it only runs when the user is on the corresponding stage.
 
 **Example Rulesheet Precondition for Stage 1:**
-*(Imagine a screenshot from Corticon Studio here)*
+![Corticon Studio screenshot](<../../static/img/stage 1.png>)
+
 `UI.currentStageNumber == 1`
 
 ### `UI.nextStageNumber` (Action)
