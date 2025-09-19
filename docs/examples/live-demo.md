@@ -2,7 +2,6 @@
 title: Live Demonstration
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Live Demonstration: One Front-End, Many Forms
 

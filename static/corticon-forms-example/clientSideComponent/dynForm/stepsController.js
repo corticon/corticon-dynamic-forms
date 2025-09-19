@@ -794,6 +794,19 @@ corticon.dynForm.StepsController = function () {
             console.error("Decision service execution failed or returned invalid status.");
             return null;
         }
+
+        if (result.corticon && result.corticon.entities && result.corticon.entities.Container && result.payload && result.payload[0] && result.payload[0].containers) {
+            const corticonContainers = result.corticon.entities.Container;
+            const payloadContainers = result.payload[0].containers;
+
+            payloadContainers.forEach(payloadContainer => {
+                const matchingCorticonContainer = corticonContainers.find(corticonContainer => corticonContainer.id === payloadContainer.id);
+                if (matchingCorticonContainer && matchingCorticonContainer.uiControls) {
+                    payloadContainer.uiControls = matchingCorticonContainer.uiControls;
+                }
+            });
+        }
+        
         const nextUI = result.payload[0];
         if (!nextUI) {
             console.error("Decision service response missing payload[0].");
