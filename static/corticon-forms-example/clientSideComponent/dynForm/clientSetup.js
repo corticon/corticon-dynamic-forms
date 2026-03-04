@@ -267,7 +267,8 @@ function setupInitialInputData() {
         inDataEmpty, // Index 5
         inDataEmpty, // Index 6
         inDataEmpty, // Index 7
-        inDataEmpty  // Index 8 (Crossings)
+        inDataEmpty, // Index 8 (Crossings)
+        inDataEmpty  // Index 9 (Registration)
     ];
     inputData = allInputData[0]; // Default to first one
 }
