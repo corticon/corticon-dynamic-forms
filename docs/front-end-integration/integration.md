@@ -27,7 +27,7 @@ Here is the step-by-step flow of how the form gets initialized:
 
 3.  **Client Setup Execution:** Once the DOM is fully loaded, `clientSetup.js` executes. Its main job is to create an instance of the `StepsController`.
 
-4.  **First Decision Service Call:** Upon initialization, the `StepsController` immediately makes its first call to the Corticon decision service (with an empty payload) to fetch the UI definition for the very first step of the form.
+4.  **First Decision Service Call:** Upon initialization, the `StepsController` makes its first call to the Corticon decision service with stage-control metadata (for example `currentStageNumber = 0`, language, and optional external data) to fetch the first step UI definition.
 
 5.  **Initial Render:** The `StepsController` receives the JSON payload from the decision service and passes it to the `uiControlsRenderers.js` module, which generates the HTML for the first set of form fields and displays them to the user.
 

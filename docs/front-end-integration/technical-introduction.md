@@ -33,11 +33,51 @@ The typical user interaction follows this pattern:
 
 This entire process is powered by the logic defined in the rules, completely decoupling the form's behavior from the front-end code.
 
-### The JSON Payload
+### Decision Service Payload Contract
 
-The Decision Service returns a JSON payload containing an array with two primary objects.
+At runtime, the controller sends and receives a two-slot payload:
 
-1.  **UI Data (index 0):** This object contains all the information the front-end needs to render the current stage of the form. It includes the definitions for containers, user interface controls, and navigation instructions like `nextStageNumber`.
-2.  **Project Data (index 1):** This object contains the business-specific data for the form. This includes any initialization data, all user responses collected so far, and any data produced by the Decision Service during its calculations.
+1. **`payload[0]` (UI/Control Data):** stage and rendering metadata.
+2. **`payload[1]` (Form Data):** accumulated business data.
 
-The front-end component is responsible for maintaining the state of the project data and passing it back to the Decision Service with each request. The Decision Service itself remains stateless.
+Typical UI/control fields in `payload[0]`:
+
+- `currentStageNumber`
+- `nextStageNumber`
+- `pathToData`
+- `labelPosition`
+- `done`
+- `report`
+- `noUiToRenderContinue`
+- `containers[]`
+
+Each container includes:
+
+- `id`
+- `title`
+- `validationMsg`
+- `uiControls[]`
+
+Each UI control includes at least:
+
+- `type`
+- `id`
+- `fieldName` (for data binding)
+- plus type-specific fields like `option`, `dataSource`, `min`, `max`, `minDT`, `maxDT`, `required`, `validationErrorMsg`
+
+### How the Front End Uses the Response
+
+1. `stepsController` reads `result.payload[0]` as the current UI step.
+2. It updates internal `pathToData` when provided.
+3. It handles non-visual stages (`noUiToRenderContinue=true`) without rendering controls.
+4. It passes `containers` to `uiControlsRenderers.renderUI(...)`.
+5. On user input save, it writes values by `fieldName` under:
+   - `payload[1]` root, or
+   - `payload[1][pathToData]` when `pathToData` is set.
+
+This contract is what lets rules decide:
+
+- which component to render (`type`)
+- what values/options to show (`value`, `option`, `dataSource`)
+- where data is stored (`fieldName`, `pathToData`)
+- when the form advances (`nextStageNumber`, `done`)

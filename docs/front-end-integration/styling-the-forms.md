@@ -20,23 +20,23 @@ A third file, `TraceStyles.css`, controls the look of the Tracer utility.
 
 Let's walk through changing the color and font weight of the container titles.
 
-1.  **Inspect the Element:** Using your browser's developer tools, you can inspect a container title and see that it is an `<h3>` element inside a `div` with the class `labelContainer`.
+1.  **Inspect the Element:** Using your browser's developer tools, inspect a container title. In the current implementation, titles are rendered as `<h3>` inside `#dynUIContainerId`.
 
 2.  **Locate the CSS Rule:** Open `UIControlsStyles.css`. You will find a rule targeting this element:
     ```css
-    .labelContainer h3 {
-        color: #0f7ac7;
-        font-size: 1.2rem;
-        margin-bottom: 15px;
+    #dynUIContainerId h3 {
+        color: #2C3E50;
+        font-size: 15px;
+        margin-bottom: 20px;
     }
     ```
 3.  **Modify the Rule:** To make the titles dark gray and bold, you can change the rule to:
     ```css
-    .labelContainer h3 {
+    #dynUIContainerId h3 {
         color: #333; /* Changed from blue to dark gray */
         font-weight: bold; /* Added font-weight */
-        font-size: 1.2rem;
-        margin-bottom: 15px;
+        font-size: 15px;
+        margin-bottom: 20px;
     }
     ```
 

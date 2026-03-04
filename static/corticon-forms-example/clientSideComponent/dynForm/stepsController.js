@@ -436,7 +436,7 @@ corticon.dynForm.StepsController = function () {
 
 
     /**
-     * Saves data entered in non-array input fields (Text, Number, DateTime, YesNo, Geolocation, Checkboxes)
+     * Saves data entered in non-array input fields (Text, Number, DateTime, YesNo, Geolocation, Checkboxes, Radio groups)
      * to the form data state.
      * @param {Object} baseEl - The jQuery object representing the container for the current step's UI.
      */
@@ -448,12 +448,14 @@ corticon.dynForm.StepsController = function () {
 
         // Find relevant inputs within containers marked as non-array controls
         let allFormEls = baseEl.find('.nonarrayTypeControl :input').not('.markerFileUploadExpense'); // Select inputs/selects/textareas
+        const processedRadioGroups = new Set();
 
         allFormEls.each(function (index, item) {
             const oneInputEl = $(item);
             const tagName = oneInputEl.prop("tagName").toLowerCase();
             const inputType = oneInputEl.prop("type").toLowerCase();
             const isCheckbox = inputType === 'checkbox';
+            const isRadio = inputType === 'radio';
             const isSelect = tagName === 'select';
 
             let formDataFieldName = oneInputEl.data("fieldName");
@@ -483,6 +485,21 @@ corticon.dynForm.StepsController = function () {
                 const val = oneInputEl.is(':checked');
                 _saveOneFormData(formDataFieldName, val);
                 return true; // Continue to next element
+            }
+
+            // --- Handle Radio Groups ---
+            if (isRadio) {
+                const radioControlId = oneInputEl.attr('data-control-id') || oneInputEl.data('controlId') || oneInputEl.attr('name');
+                if (!radioControlId || processedRadioGroups.has(radioControlId)) {
+                    return true;
+                }
+                processedRadioGroups.add(radioControlId);
+
+                const radioGroupInputs = baseEl.find(`.nonarrayTypeControl :input[type='radio'][data-control-id='${radioControlId}']`);
+                const selectedRadio = radioGroupInputs.filter(':checked').first();
+                const selectedValue = selectedRadio.length > 0 ? selectedRadio.val() : null;
+                _saveOneFormData(formDataFieldName, selectedValue);
+                return true;
             }
 
             // --- Handle Other Inputs (Text, Number, Date, Select) ---
@@ -576,34 +593,112 @@ corticon.dynForm.StepsController = function () {
      */
     function validateForm(baseDynamicUIEl) {
         let isValid = true;
+        const errorMsgClass = 'error-message-validation';
+
+        baseDynamicUIEl.find(`.${errorMsgClass}`).remove();
+        baseDynamicUIEl.find('.inputContainer.has-error').removeClass('has-error');
+
+        function appendValidationError(inputEl, message) {
+            const container = inputEl.closest('.inputContainer');
+            container.addClass('has-error');
+            isValid = false;
+
+            const errorMessage = $('<span>')
+                .addClass(errorMsgClass)
+                .text(message);
+
+            if (inputEl.is(':radio')) {
+                const radioGroup = container.find('.radio-options-group');
+                if (radioGroup.length > 0) {
+                    radioGroup.last().after(errorMessage);
+                    return;
+                }
+            }
+
+            inputEl.after(errorMessage);
+        }
+
+        // --- Required validation ---
         const requiredInputs = baseDynamicUIEl.find(':input[data-required="true"]:visible').not(':disabled');
+        const validatedRadioGroups = new Set();
 
         requiredInputs.each(function (index, item) {
             const inputEl = $(item);
+
+            if (inputEl.is(':radio')) {
+                const radioControlId = inputEl.attr('data-control-id') || inputEl.data('controlId') || inputEl.attr('name');
+                if (!radioControlId || validatedRadioGroups.has(radioControlId)) {
+                    return true;
+                }
+                validatedRadioGroups.add(radioControlId);
+
+                const radioGroupInputs = baseDynamicUIEl.find(`:radio[data-control-id='${radioControlId}']:visible`).not(':disabled');
+                if (!radioGroupInputs.is(':checked')) {
+                    appendValidationError(radioGroupInputs.first(), 'Please select an option.');
+                }
+                return true;
+            }
+
+            if (inputEl.is(':checkbox')) {
+                if (!inputEl.is(':checked')) {
+                    appendValidationError(inputEl, 'This field is required.');
+                }
+                return true;
+            }
+
             const value = inputEl.val();
-            let fieldHasError = false;
+            const isEmpty = (!value || (typeof value === 'string' && value.trim() === '') || (Array.isArray(value) && value.length === 0));
+            if (isEmpty) {
+                appendValidationError(inputEl, 'This field is required.');
+            }
+            return true;
+        });
 
-            if (!value || (typeof value === 'string' && value.trim() === '')) {
-                fieldHasError = true;
+        // --- Text length validation configured via UIControl.min/max ---
+        const lengthConstrainedInputs = baseDynamicUIEl.find(':input:visible').not(':disabled').filter(function () {
+            const inputEl = $(this);
+            const tagName = (inputEl.prop('tagName') || '').toLowerCase();
+            const inputType = (inputEl.prop('type') || '').toLowerCase();
+            const isTextLike = tagName === 'textarea' || inputType === 'text';
+
+            if (!isTextLike) {
+                return false;
             }
 
-            const container = inputEl.closest('.inputContainer');
-            const errorMsgClass = 'error-message-validation';
-            container.find(`.${errorMsgClass}`).remove();
+            const hasMin = inputEl.attr('data-minlength') !== undefined || inputEl.attr('minlength') !== undefined;
+            const hasMax = inputEl.attr('data-maxlength') !== undefined || inputEl.attr('maxlength') !== undefined;
+            return hasMin || hasMax;
+        });
 
-            if (fieldHasError) {
-                isValid = false;
-                const errorMessage = $(`<span class="${errorMsgClass}">This field is required.</span>`);
-                inputEl.after(errorMessage);
-                container.addClass('has-error');
-                // console.warn("Validation failed for required field:", inputEl.data("fieldName") || inputEl.attr("id")); // Keep commented unless needed
-            } else {
-                container.removeClass('has-error');
+        lengthConstrainedInputs.each(function (index, item) {
+            const inputEl = $(item);
+            const rawValue = inputEl.val();
+            const value = rawValue === undefined || rawValue === null ? '' : String(rawValue);
+            const minLengthAttr = inputEl.attr('data-minlength') !== undefined ? inputEl.attr('data-minlength') : inputEl.attr('minlength');
+            const maxLengthAttr = inputEl.attr('data-maxlength') !== undefined ? inputEl.attr('data-maxlength') : inputEl.attr('maxlength');
+            const minLength = minLengthAttr !== undefined ? Number(minLengthAttr) : undefined;
+            const maxLength = maxLengthAttr !== undefined ? Number(maxLengthAttr) : undefined;
+
+            // Let "required" validation handle empty values.
+            if (value.length === 0) {
+                return true;
             }
+
+            if (Number.isFinite(minLength) && value.length < minLength) {
+                appendValidationError(inputEl, `Enter at least ${minLength} characters.`);
+                return true;
+            }
+
+            if (Number.isFinite(maxLength) && value.length > maxLength) {
+                appendValidationError(inputEl, `Enter no more than ${maxLength} characters.`);
+                return true;
+            }
+
+            return true;
         });
 
         if (!isValid) {
-            alert("Please fill in all required fields.");
+            alert("Please correct the highlighted fields.");
         }
         return isValid;
     }

@@ -42,6 +42,14 @@ function setupConditionalVisibility() {
         const changedElement = $(this);
         let triggerId = changedElement.attr('id');
         let kendoWidget = null;
+        const inputType = (changedElement.prop('type') || '').toLowerCase();
+
+        if (inputType === 'radio') {
+            const radioControlId = changedElement.attr('data-control-id') || changedElement.data('controlId');
+            if (radioControlId) {
+                triggerId = radioControlId;
+            }
+        }
 
         // --- Kendo Check ---
         if (useKui) {
@@ -79,7 +87,10 @@ function setupConditionalVisibility() {
         const triggerId = dependentContainer.attr('data-triggered-by'); // Read attribute // [!code focus]
         let kendoWidget = null;
         if (triggerId) {
-            const triggerElement = $(`#${triggerId}`);
+            let triggerElement = $(`#${triggerId}`);
+            if (triggerElement.length === 0) {
+                triggerElement = $(`#dynUIContainerId :radio[data-control-id='${triggerId}']`);
+            }
             if (useKui && triggerElement.length) {
                 kendoWidget = kendo.widgetInstance(triggerElement);
                 if (!kendoWidget && triggerElement.parent().is('.k-widget')) {
@@ -113,7 +124,16 @@ function updateConditionalVisibility(conditionalContainerEl, kendoWidget) {
         return;
     }
 
-    const triggerElement = $(`#${triggerId}`);
+    let triggerElement = $(`#${triggerId}`);
+    let triggerIsRadioGroup = false;
+    if (triggerElement.length === 0) {
+        const radioGroupEls = $(`#dynUIContainerId :radio[data-control-id='${triggerId}']`);
+        if (radioGroupEls.length > 0) {
+            triggerElement = radioGroupEls;
+            triggerIsRadioGroup = true;
+        }
+    }
+
     if (triggerElement.length === 0) {
         console.warn(`[UpdateVisibility] Trigger element with ID #${triggerId} not found.`);
         conditionalContainerEl.hide().addClass('corticon-hidden-control');
@@ -139,8 +159,10 @@ function updateConditionalVisibility(conditionalContainerEl, kendoWidget) {
         currentValue = kendoWidget.value();
         // console.log(`[UpdateVisibility] Got value from Kendo widget (${kendoWidget.options.name}):`, currentValue);
     } else {
-        const triggerType = triggerElement.prop('type');
-        if (triggerType === 'checkbox') { currentValue = triggerElement.is(':checked') ? 'true' : 'false'; }
+        const triggerType = (triggerElement.first().prop('type') || '').toLowerCase();
+        if (triggerIsRadioGroup || triggerType === 'radio') {
+            currentValue = triggerElement.filter(':checked').first().val();
+        } else if (triggerType === 'checkbox') { currentValue = triggerElement.is(':checked') ? 'true' : 'false'; }
         else { currentValue = triggerElement.val(); } // Works for select and text input
         // console.log(`[UpdateVisibility] Got value using jQuery .val() or .is(':checked'):`, currentValue);
     }

@@ -178,6 +178,9 @@ corticon.dynForm.UIControlsRenderer = function () {
                 case 'SingleChoice':
                     renderSingleChoiceInput(oneUIControl, containerDiv); // Pass containerDiv
                     break;
+                case 'Radio':
+                    renderRadioInput(oneUIControl, containerDiv, labelPositionAtUILevel);
+                    break;
                 case 'MultipleChoices':
                 case 'MultipleChoicesMultiSelect':
                     renderMultipleChoicesInput(oneUIControl, containerDiv, labelPositionAtUILevel);
@@ -225,6 +228,55 @@ corticon.dynForm.UIControlsRenderer = function () {
      */
     function renderTextInput(oneUIControl, parentEl, labelPositionAtContainerLevel) {
         renderInputThatSupportsArrayType(oneUIControl, parentEl, labelPositionAtContainerLevel);
+    }
+
+    /**
+     * Renders a TextArea control.
+     * @param {Object} oneUIControl - The UI control object.
+     * @param {Object} parentEl - The parent jQuery element.
+     * @param {String} labelPositionAtContainerLevel - Default label position.
+     */
+    function renderTextAreaInput(oneUIControl, parentEl, labelPositionAtContainerLevel) {
+        const inputContainerEl = createInputContainer(parentEl, oneUIControl);
+        appendLabel(oneUIControl, labelPositionAtContainerLevel, inputContainerEl);
+
+        const inputId = oneUIControl.id || ('textarea_' + getNextUniqueId());
+        const textAreaEl = $('<textarea>')
+            .attr('id', inputId)
+            .attr('rows', oneUIControl.rows || 3)
+            .attr('cols', oneUIControl.cols || 40)
+            .attr('title', oneUIControl.tooltip || '')
+            .attr('placeholder', oneUIControl.placeholder || '')
+            .addClass('textAreaControl')
+            .data("controlType", "TextArea");
+
+        if (oneUIControl.fieldName) {
+            textAreaEl.data("fieldName", oneUIControl.fieldName);
+        } else {
+            console.error(`Missing fieldName for TextArea control: ID ${oneUIControl.id}`);
+        }
+
+        if (oneUIControl.required === true) {
+            textAreaEl.attr('data-required', true);
+        }
+
+        applyTextLengthAttributes(textAreaEl, oneUIControl, oneUIControl.id, 'TextArea');
+
+        if (oneUIControl.value !== undefined && oneUIControl.value !== null) {
+            textAreaEl.val(oneUIControl.value);
+        }
+
+        inputContainerEl.append(textAreaEl);
+
+        if (itsFlagRenderWithKui && typeof textAreaEl.kendoTextArea === 'function') {
+            try {
+                textAreaEl.kendoTextArea();
+            } catch (e) {
+                console.error("Error applying Kendo TextArea:", e);
+            }
+        }
+
+        addValidationMsgFromDecisionService(oneUIControl, inputContainerEl);
     }
 
     /**
@@ -423,6 +475,33 @@ corticon.dynForm.UIControlsRenderer = function () {
         addValidationMsgFromDecisionService(oneUIControl, mainControlContainer);
     }
 
+    /**
+     * Applies text length constraints to an input control when configured in rules.
+     * `UIControl.min/max` are treated as character limits for Text/TextArea controls.
+     * @param {Object} inputEl - jQuery input/textarea element.
+     * @param {Object} oneUIControl - Control configuration from DS.
+     * @param {String} controlId - Control id (for logging).
+     * @param {String} controlType - Control type (for logging).
+     */
+    function applyTextLengthAttributes(inputEl, oneUIControl, controlId, controlType) {
+        const minLength = Number(oneUIControl.min);
+        const maxLength = Number(oneUIControl.max);
+
+        if (Number.isFinite(minLength) && minLength >= 0) {
+            inputEl.attr('minlength', minLength);
+            inputEl.attr('data-minlength', minLength);
+        }
+
+        if (Number.isFinite(maxLength) && maxLength >= 0) {
+            inputEl.attr('maxlength', maxLength);
+            inputEl.attr('data-maxlength', maxLength);
+        }
+
+        if (Number.isFinite(minLength) && Number.isFinite(maxLength) && minLength > maxLength) {
+            console.warn(`${controlType} control ${controlId || '(missing id)'} has min > max (${minLength} > ${maxLength}).`);
+        }
+    }
+
 
     /**
      * Creates a single Text input element.
@@ -448,6 +527,7 @@ corticon.dynForm.UIControlsRenderer = function () {
         } else {
             console.error(`Missing fieldName for Text input: ID ${oneUIControl.id}`);
         }
+        textInputEl.data("controlType", "Text");
         // Mark if this is part of an array input for saving logic
         if (isArrayType(oneUIControl)) {
             textInputEl.data("isArrayElement", true);
@@ -455,6 +535,7 @@ corticon.dynForm.UIControlsRenderer = function () {
         if (oneUIControl.required === true) {
             textInputEl.attr('data-required', true);
         }
+        applyTextLengthAttributes(textInputEl, oneUIControl, oneUIControl.id, 'Text');
 
         // --- Default Value ---
         // If it's the *first* input of an array, use value. Otherwise, could leave empty.
@@ -1056,6 +1137,78 @@ corticon.dynForm.UIControlsRenderer = function () {
         // }
 
         // Add DS validation message (as before)
+        addValidationMsgFromDecisionService(oneUIControl, inputContainerEl);
+    }
+
+    /**
+     * Renders a single-select radio group.
+     * @param {Object} oneUIControl - Control configuration.
+     * @param {Object} parentEl - Parent jQuery element.
+     * @param {String} labelPositionAtContainerLevel - Default label position.
+     */
+    function renderRadioInput(oneUIControl, parentEl, labelPositionAtContainerLevel) {
+        const inputContainerEl = createInputContainer(parentEl, oneUIControl);
+        appendLabel(oneUIControl, labelPositionAtContainerLevel, inputContainerEl);
+
+        if (!oneUIControl.id) {
+            console.error("Missing id for Radio control.");
+            inputContainerEl.append('<span class="error-message">Radio configuration error: Missing ID.</span>');
+            return;
+        }
+
+        if (!oneUIControl.fieldName) {
+            console.error(`Missing fieldName for Radio control: ID ${oneUIControl.id}`);
+            inputContainerEl.append('<span class="error-message">Radio configuration error: Missing fieldName.</span>');
+            return;
+        }
+
+        const options = oneUIControl.option;
+        if (!Array.isArray(options) || options.length === 0) {
+            console.error(`Missing 'option' array for Radio control: ID ${oneUIControl.id}`);
+            inputContainerEl.append('<span class="error-message">Radio configuration error: No options configured.</span>');
+            addValidationMsgFromDecisionService(oneUIControl, inputContainerEl);
+            return;
+        }
+
+        const radioGroupName = `${oneUIControl.id || oneUIControl.fieldName}_radio`;
+        const optionsWrapperEl = $('<div>').addClass('radio-options-group');
+        inputContainerEl.append(optionsWrapperEl);
+
+        options.forEach((opt, index) => {
+            if (!opt || opt.value === undefined || opt.displayName === undefined) {
+                console.warn(`Skipping invalid radio option in control ${oneUIControl.id}:`, opt);
+                return;
+            }
+
+            const optionId = index === 0 ? oneUIControl.id : `${oneUIControl.id}_${index}`;
+            const radioInputEl = $('<input/>')
+                .attr('type', 'radio')
+                .attr('id', optionId)
+                .attr('name', radioGroupName)
+                .attr('value', opt.value)
+                .attr('data-control-id', oneUIControl.id)
+                .data('fieldName', oneUIControl.fieldName)
+                .data('controlType', 'Radio')
+                .data('controlId', oneUIControl.id);
+
+            if (oneUIControl.required === true && index === 0) {
+                radioInputEl.attr('data-required', true);
+            }
+
+            if (oneUIControl.value !== undefined && oneUIControl.value !== null &&
+                String(oneUIControl.value) === String(opt.value)) {
+                radioInputEl.prop('checked', true);
+            }
+
+            const optionLabelEl = $('<label>')
+                .addClass('radio-option')
+                .attr('for', optionId)
+                .append(radioInputEl)
+                .append($('<span>').text(opt.displayName));
+
+            optionsWrapperEl.append(optionLabelEl);
+        });
+
         addValidationMsgFromDecisionService(oneUIControl, inputContainerEl);
     }
     // --- File Upload ---

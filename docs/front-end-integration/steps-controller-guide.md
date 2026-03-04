@@ -5,36 +5,44 @@ sidebar_position: 3
 
 # Guide to the Steps Controller
 
-The `stepsController.js` is the central coordinator for the dynamic multi-step form. It acts as the "brain" of the form, managing the user's journey, orchestrating the flow of data, handling validation, and communicating with the Corticon.js decision service.
+`stepsController.js` is the runtime coordinator for the multi-stage form.  
+It owns state, calls the decision service, validates user input, persists answers, and triggers rendering for each stage.
 
 ## Core Responsibilities
 
-* **State Management:** Maintains the complete state of the form, including the current step number, the data entered in all previous steps, and the payload received from the Corticon.js decision service.
-* **Navigation Control:** Manages all movement between steps ("Next", "Previous"), ensuring that all necessary processing (like validation) is completed before rendering the next view.
-* **Validation:** Initiates client-side validation for the current step's fields before allowing the user to proceed.
-* **Data Interaction:** Serves as the primary liaison between the UI and the Corticon decision service. It packages form data, sends it for processing, and uses the response to dynamically adjust the form.
+- State management: maintains the two-part decision payload `[controlData, formData]`.
+- Navigation control: handles `Next`/`Previous` flow and stage transitions.
+- Validation: enforces required checks and client-side constraints (including text length min/max when configured).
+- Data interaction: collects UI input, maps it by `fieldName`, and stores under the active `pathToData`.
+- Decision-service orchestration: executes rules and renders returned UI metadata.
 
 ## State Management in Detail
 
-The Decision Service itself is stateless. Therefore, the `stepsController` is solely responsible for maintaining the state of the form as the user progresses. It accomplishes this by:
+The decision service is stateless across requests, so `stepsController` carries state between calls:
 
-* **Tracking the Current Stage:** The controller maintains a variable for the `currentStageNumber`. When a user proceeds, the controller uses the `nextStageNumber` from the Decision Service's response to update this value for the subsequent request.
-* **Aggregating User Data:** The controller maintains an object that stores all data collected from the user. When a rule author defines a user interface control, they also specify a `fieldName` where the response should be stored. The controller uses this `fieldName` to save the user's input into the main data object.
-* **Handling the Data Path:** The Decision Service can specify a `pathToData` to instruct the controller to store responses within a specific nested object in the main data object. The controller maintains the current `pathToData` value across stages unless a new one is provided.
-* **Finalizing Data:** When the Decision Service returns `done: true`, the controller knows the form is complete. It is then responsible for passing the final, aggregated data object to another function or process for submission.
+- `itsDecisionServiceInput[0]` contains control metadata (`currentStageNumber`, `nextStageNumber`, `pathToData`, etc.).
+- `itsDecisionServiceInput[1]` is aggregated business data from user input and rule effects.
+- `pathToData` controls where saved values land:
+  - root object when `pathToData` is empty/null
+  - nested object when `pathToData='SomeEntityName'`
+- `nextStageNumber` from the current response becomes `currentStageNumber` for the next request.
 
 ## Key Functions
 
-| Function         | Description                                                                                                                                                                                                 |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `init()`         | Initializes the controller, sets the form to its starting state, and makes the initial call to the decision service to render the first set of controls.                                                    |
-| `nextStep()`     | Manages the transition to the next step. It first triggers validation for the current step. If validation succeeds, it sends the current form data to the decision service and renders the subsequent step. |
-| `previousStep()` | Manages the transition to the previous step. It retrieves the form state for the prior step from its history and re-renders it without calling the decision service.                                        |
-| `getFormData()`  | A utility function that gathers and returns all the data entered by the user across all steps, formatted as a single JSON object ready for submission.                                                      |
+| Function | Description |
+| --- | --- |
+| `startDynUI(baseEl, decisionServiceEngine, externalData, language, questionnaireName, useKui)` | Initializes state and executes the first stage. |
+| `processNextStep(baseEl, decisionServiceEngine, language, saveInputToFormData=true)` | Validates current controls, saves values, sets next stage, and executes next decision step. |
+| `processPrevStep(baseEl, decisionServiceEngine, language)` | Restores previous state from history and re-renders that stage. |
+| `_askDecisionServiceForNextUIElementsAndRender(...)` | Executes DS, processes `payload[0]`, handles background/no-UI steps, and calls the renderer. |
+| `_saveNonArrayInputsToFormData(baseEl)` | Saves non-array controls by `fieldName`, including checkbox/radio/select/text/date/number conversions. |
+| `validateForm(baseEl)` | Runs client-side required validation and rule-driven length checks before allowing Next. |
 
 ## System Interactions
 
 The `stepsController` works closely with other components:
 
-* **`uiControlsRenderers.js`:** The controller **commands** the renderer. It receives a payload from the decision service and passes the UI definitions to the renderer to create the HTML.
-* **`decisionServiceBundle.js`:** This is the controller's source of truth. It sends the current form data and receives instructions on what to display next, including new fields, updated dropdowns, or changes in field visibility.
+- `uiControlsRenderers.js`: renders the current stage controls from decision metadata.
+- `decisionServiceBundle.js`: evaluates rules and returns UI + navigation instructions.
+- `history.js`: stores snapshots for Previous/back navigation.
+- `customEvents.js`: broadcasts lifecycle events (`BEFORE_DS_EXECUTION`, `AFTER_UI_STEP_RENDERED`, `REVIEW_STEP_DISPLAYED`, etc.).

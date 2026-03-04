@@ -145,6 +145,47 @@
     margin-bottom: 10px;
 }
 
+.error-message-validation {
+    color: #E74C3C;
+    font-size: 12px;
+    display: block;
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+.inputContainer.has-error input[type="text"],
+.inputContainer.has-error input[type="number"],
+.inputContainer.has-error input[type="date"],
+.inputContainer.has-error input[type="datetime-local"],
+.inputContainer.has-error textarea,
+.inputContainer.has-error select {
+    border-color: #E74C3C;
+}
+
+.field-validation-hint {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: -6px;
+    margin-bottom: 8px;
+}
+
+.radio-options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2C3E50;
+    font-size: 13px;
+    cursor: pointer;
+}
+
 .textAreaControl {
     vertical-align: top;
     /* Align text area nicely */
