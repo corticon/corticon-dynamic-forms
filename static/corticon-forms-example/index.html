@@ -2,176 +2,308 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8" />
-	<title> Rules Driven Dynamic Forms </title>
+    <meta charset="utf-8" />
+    <title>Rules Driven Dynamic Forms</title>
 
-	<script src="https://unpkg.com/jsonpath-plus@5.0.2/dist/index-browser-umd.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" async defer></script>
-	<script src="https://kendo.cdn.telerik.com/2023.1.425/js/jquery.min.js"></script>
+    <script src="https://unpkg.com/jsonpath-plus@5.0.2/dist/index-browser-umd.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" async defer></script>
+    <script src="https://kendo.cdn.telerik.com/2023.1.425/js/jquery.min.js"></script>
 
-	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
-	<link rel="stylesheet" href="https://unpkg.com/@progress/kendo-theme-default@11.0.2/dist/default-main.css" />
-	<script src="https://kendo.cdn.telerik.com/2023.1.425/js/kendo.all.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@progress/kendo-theme-default@11.0.2/dist/default-main.css" />
+    <script src="https://kendo.cdn.telerik.com/2023.1.425/js/kendo.all.min.js"></script>
 
-	<script type="text/javascript" src="clientSideComponent/util/util.js"></script>
-	<script type="text/javascript" src="clientSideComponent/dynForm/customEvents.js"></script>
-	<script type="text/javascript" src="trace/trace.js"></script>
-	<script type="text/javascript" src="clientSideComponent/dynForm/history.js"></script>
-	<script type="text/javascript" src="clientSideComponent/dynForm/uiControlsRenderers.js"></script>
-	<script type="text/javascript" src="clientSideComponent/dynForm/stepsController.js"></script>
+    <script type="text/javascript" src="clientSideComponent/util/util.js"></script>
+    <script type="text/javascript" src="clientSideComponent/dynForm/customEvents.js"></script>
+    <script type="text/javascript" src="trace/trace.js"></script>
+    <script type="text/javascript" src="clientSideComponent/dynForm/history.js"></script>
+    <script type="text/javascript" src="clientSideComponent/dynForm/uiControlsRenderers.js"></script>
+    <script type="text/javascript" src="clientSideComponent/dynForm/stepsController.js"></script>
 
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-	<link rel="stylesheet" href="client.css">
-	<link rel="stylesheet" href="clientSideComponent/dynForm/UIControlsStyles.css">
-	<link rel="stylesheet" href="trace/TraceStyles.css">
-	<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:300,400|Source+Sans+Pro:400,300' rel='stylesheet'
-		type='text/css'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="client.css">
+    <link rel="stylesheet" href="clientSideComponent/dynForm/UIControlsStyles.css">
+    <link rel="stylesheet" href="trace/TraceStyles.css">
+    <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans:300,400|Source+Sans+Pro:400,300" rel="stylesheet"
+        type="text/css">
 
-	<script type="text/javascript" src="config.js"></script>
+    <script type="text/javascript" src="decisionServices/Homeowners/browser/decisionServiceBundle.js"></script>
+    <script type="text/javascript" src="decisionServices/JobApplication/browser/decisionServiceBundle.js"></script>
+    <script type="text/javascript" src="decisionServices/I18N/browser/decisionServiceBundle.js"></script>
+    <script type="text/javascript" src="decisionServices/FilterByCountryStateCity/browser/decisionServiceBundle.js"></script>
+    <script type="text/javascript" src="decisionServices/Select-Vehicle-Model-Make-Year/browser/decisionServiceBundle.js"></script>
+    <script type="text/javascript" src="decisionServices/PropertyCasualty/browser/decisionServiceBundle.js"></script>
+    <script type="text/javascript" src="decisionServices/hhsMarketplace/browser/decisionServiceBundle.js"></script>
+    <script type="text/javascript" src="decisionServices/ForeignRisk/browser/decisionServiceBundle.js"></script>
+    <script type="text/javascript" src="decisionServices/CrossingForm/browser/decisionServiceBundle.js"></script>
 
-	<script type="text/javascript" src="decisionServices/Homeowners/browser/decisionServiceBundle.js"></script>
-	<script type="text/javascript" src="decisionServices/JobApplication/browser/decisionServiceBundle.js"></script>
-	<script type="text/javascript" src="decisionServices/I18N/browser/decisionServiceBundle.js"></script>
-	<script type="text/javascript"
-		src="decisionServices/FilterByCountryStateCity/browser/decisionServiceBundle.js"></script>
-	<script type="text/javascript"
-		src="decisionServices/Select-Vehicle-Model-Make-Year/browser/decisionServiceBundle.js"></script>
-	<script type="text/javascript" src="decisionServices/PropertyCasualty/browser/decisionServiceBundle.js"></script>
-	<script type="text/javascript" src="decisionServices/hhsMarketplace/browser/decisionServiceBundle.js"></script>
-	<script type="text/javascript" src="decisionServices/ForeignRisk/browser/decisionServiceBundle.js"></script>
-	<script type="text/javascript" src="decisionServices/CrossingForm/browser/decisionServiceBundle.js"></script>
-	<script type="text/javascript" src="decisionServices/Registration/browser/decisionServiceBundle.js"></script>
-
-
-	<script type="text/javascript" src="clientSideComponent/dynForm/clientSetup.js"></script>
+    <script type="text/javascript" src="clientSideComponent/dynForm/clientSetup.js"></script>
 </head>
 
 <body>
-	<div class="sampleTitle"><i class="bi bi-file-earmark-ruled"></i>&nbsp; Rules Driven Dynamic Forms
-	</div>
+    <div class="sampleTitle"><i class="bi bi-file-earmark-ruled"></i>&nbsp; Rules Driven Dynamic Forms</div>
 
-	<div class="page-container">
+    <div class="page-container">
+        <div class="sidebar screen-zone" id="controlPanelZone">
+            <div class="zone-header">
+                <span>Control Panel</span>
+                <details class="help-bubble">
+                    <summary>?</summary>
+                    <div class="help-content">
+                        Select a sample decision service, navigate form stages, switch renderer mode, and toggle UI overlays.
+                    </div>
+                </details>
+            </div>
+            <div class="commandBar">
+                <div class="commandItem">
+                    <label for="sampleSelectId" class="sampleSelectLabel">
+                        Select Sample:
+                        <details class="help-bubble inline-help">
+                            <summary>?</summary>
+                            <div class="help-content">
+                                Chooses the loaded decision service bundle that drives stage contracts, UI controls, and data mapping.
+                            </div>
+                        </details>
+                    </label>
+                    <select id="sampleSelectId" class="sampleSelect" onchange="processSwitchSample(this)">
+                        <option value="0">Homeowners Insurance</option>
+                        <option value="1">Job Application - I18N option1</option>
+                        <option value="2">I18N with SCO - I18N option 2</option>
+                        <option value="3">Select Country, then State/Province, then City (JSON path example)</option>
+                        <option value="4">Select Vehicle Make, then Model, then Year (JSON path example)</option>
+                        <option value="5">Property/Casualty Insurance Quote</option>
+                        <option value="6">Healthcare.gov Marketplace Plan Selection</option>
+                        <option value="7">Foreign Travel Risk</option>
+                        <option value="8">Crossing Form</option>
+                    </select>
+                </div>
 
-		<div class="sidebar">
-			<div class="commandBar">
-				<div class="commandItem">
-					<label for="sampleSelectId" class="sampleSelectLabel">Select Sample:</label>
-					<select id="sampleSelectId" class="sampleSelect" onchange="processSwitchSample(this)">
-						<option value="0">Homeowners Insurance</option>
-						<option value="1">Job Application - I18N option1</option>
-						<option value="2">I18N with SCO - I18N option 2</option>
-						<option value="3">Select Country, then State/Province, then City (JSON path example)</option>
-						<option value="4">Select Vehicle Make, then Model, then Year (JSON path example)</option>
-						<option value="5">Property/Casualty Insurance Quote</option>
-						<option value="6">Healthcare.gov Marketplace Plan Selection</option>
-						<option value="7">Foreign Travel Risk</option>
-						<option value="8">Crossing Form</option>
-						<option value="9">Registration</option>
-					</select>
-				</div>
+                <div class="commandItem" style="display: none;" id="languageContainerId">
+                    <select class="sampleSelect" id="languageSelectId" onchange="processSwitchLanguage(this)"></select>
+                </div>
 
-				<div class="commandItem" style="display: none;" id="languageContainerId">
-					<select class="sampleSelect" id="languageSelectId" onchange="processSwitchLanguage(this)"></select>
-				</div>
+                <div class="commandItem buttonGroup">
+                    <span class="commandButton" id="startActionId" onclick="processClickStart(); return false;">
+                        <a class="command" accesskey="s" title="Start Dynamic Form" href="#">
+                            <span style="text-decoration: underline">Start</span>
+                        </a>
+                    </span>
+                    <span class="commandButton commandButtonHidden" id="prevActionId" onclick="processClickPrev(); return false;">
+                        <a class="command" accesskey="p" title="Previous Step" href="#">
+                            <span style="text-decoration: underline">Previous</span>
+                        </a>
+                    </span>
+                    <span class="commandButton commandButtonHidden" id="nextActionId" onclick="processClickNext(); return false;">
+                        <a class="command" accesskey="n" title="Next Step" href="#">
+                            <span style="text-decoration: underline">Next</span>
+                        </a>
+                    </span>
+                    <span class="commandButton" id="showTraceId" onclick="processShowTrace(); return false;">
+                        <a class="command" title="Show Trace" href="#">
+                            <span style="text-decoration: underline">Show Trace</span>
+                        </a>
+                    </span>
+                    <span class="commandButton commandButtonHidden" id="hideTraceId" onclick="processHideTrace(); return false;">
+                        <a class="command" title="Hide Trace" href="#">
+                            <span style="text-decoration: underline">Hide Trace</span>
+                        </a>
+                    </span>
+                    <span class="commandButton" id="useHtmlId" onclick="processUseHtml(); return false;">
+                        <a class="command" title="Use Simple Html elements" href="#">Use Html</a>
+                    </span>
+                    <span class="commandButton commandButtonHidden" id="useKuiId" onclick="processUseKui(); return false;">
+                        <a class="command" title="Use KendoUI Components" href="#">Use KendoUI</a>
+                    </span>
+                </div>
 
-				<div class="commandItem buttonGroup">
-					<span class="commandButton" id="startActionId" onclick="processClickStart(); return false;">
-						<a class="command" accesskey="s" title="Start Dynamic Form" href="#">
-							<span style="text-decoration: underline">Start</span>
-						</a>
-					</span>
-					<span class="commandButton commandButtonHidden" id="prevActionId"
-						onclick="processClickPrev(); return false;">
-						<a class="command" accesskey="p" title="Previous Step" href="#">
-							<span style="text-decoration: underline">Previous</span>
-						</a>
-					</span>
-					<span class="commandButton commandButtonHidden" id="nextActionId"
-						onclick="processClickNext(); return false;">
-						<a class="command" accesskey="n" title="Next Step" href="#">
-							<span style="text-decoration: underline">Next</span>
-						</a>
-					</span>
-					<span class="commandButton" id="showTraceId" onclick="processShowTrace(); return false;">
-						<a class="command" title="Show Trace" href="#">
-							<span style="text-decoration: underline">Show Trace</span>
-						</a>
-					</span>
-					<span class="commandButton commandButtonHidden" id="hideTraceId"
-						onclick="processHideTrace(); return false;">
-						<a class="command" title="Hide Trace" href="#">
-							<span style="text-decoration: underline">Hide Trace</span>
-						</a>
-					</span>
-					<span class="commandButton" id="useHtmlId" onclick="processUseHtml(); return false;">
-						<a class="command" title="Use Simple Html elements" href="#">Use Html</a>
-					</span>
-					<span class="commandButton commandButtonHidden" id="useKuiId"
-						onclick="processUseKui(); return false;">
-						<a class="command" title="Use KendoUI Components" href="#">Use KendoUI</a>
-					</span>
-				</div>
-			</div>
-		</div>
+                <div class="commandItem">
+                    <label class="sampleSelectLabel">
+                        Display Options
+                        <details class="help-bubble inline-help">
+                            <summary>?</summary>
+                            <div class="help-content">
+                                Enable or disable helper overlays and instrumentation widgets without changing form behavior.
+                            </div>
+                        </details>
+                    </label>
+                    <div class="display-options-list">
+                        <label class="display-option-item">
+                            <input type="checkbox" id="toggleHintsId" />
+                            <span>Show '?' hint bubbles</span>
+                        </label>
+                        <label class="display-option-item">
+                            <input type="checkbox" id="toggleStageContractId" />
+                            <span>Show Stage Contract widget</span>
+                        </label>
+                        <label class="display-option-item">
+                            <input type="checkbox" id="togglePerformanceId" />
+                            <span>Show Performance widget</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<div class="main-content">
-			<ul id="progressbar"></ul>
-			<div id="dynUIContainerId" class="dynUIContainer">
-				<h1>Rules Driven Dynamic Forms</h1>
-				<div style="margin: 2rem;">
-					In these samples the forms are generated on the fly based on rules from Corticon.js decision
-					services. It shows how the decision service acts as the model for a generic form component.
+        <div class="main-content">
+            <ul id="progressbar"></ul>
+            <div class="screen-zone" id="renderZone">
+                <div class="zone-header">
+                    <span>Rendered Form (Rules Output)</span>
+                    <details class="help-bubble">
+                        <summary>?</summary>
+                        <div class="help-content">
+                            <div style="margin-bottom: 8px;">
+                                The decision service decides which controls render, where data is written, and validation behavior.
+                            </div>
 
-					Questions can be conditionally asked based on inputs from previous questions and from external
-					data as well.
+                            <details class="help-expander">
+                                <summary>UI-Specific Schema Fields</summary>
+                                <div class="schemaLegendGrid">
+                                    <div><code>pathToData</code>: target object branch for stage values</div>
+                                    <div><code>fieldName</code>: property key written by the control</div>
+                                    <div><code>type</code>: renderer selected (Text, Radio, MultiExpenses, etc.)</div>
+                                    <div><code>option</code>: choice list used by selectable controls</div>
+                                    <div><code>required</code>/<code>requiredBy...</code>: mandatory behavior (static/conditional)</div>
+                                    <div><code>minLength</code>/<code>maxLength</code>/<code>minDT</code>/<code>maxDT</code>: constraints</div>
+                                </div>
+                            </details>
 
-					The component can render the form with either simple Html controls or using KendoUI component
-					library.
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="allTracesContainer">
-		<div class="tracePanelTitle">Decision Service (Rules) Trace Panel</div>
-		<div class="stageTraceHistory" style="overflow-x: auto; overflow-y: hidden; padding: 0.8rem;">
-			<span style="width: 20px;" id="traceHistorySummaryId"><i class="bi bi-journal-text"></i></span>
-			<span style="margin-left: 0.6rem;" id="traceHistoryId"></span>
-		</div>
-		<table width="100%">
-			<tr>
-				<td>
-					<i class="bi bi-arrow-down-right-square"></i>&nbsp;Input to Decision Service Call <a href="#"
-						title="Copy to clipboard" class="copyToClip"
-						onclick="corticon.util.copyToClipboard('#decisionServiceInputId'); return false;"><i
-							class="bi bi-clipboard-plus"></i></a>
-				</td>
-				<td>
-					<i class="bi bi-arrow-up-left-square"></i>&nbsp;Results From Decision Service Call &nbsp;<span
-						id="execTimeId"></span> <a href="#" title="Copy to clipboard" class="copyToClip"
-						onclick="corticon.util.copyToClipboard('#decisionServiceResultId'); return false;"><i
-							class="bi bi-clipboard-plus"></i></a>
-				</td>
-				<td>
-					<i class="bi bi-clipboard-data"></i>&nbsp;Accrued Form Data &nbsp;<a href="#"
-						title="Copy to clipboard" class="copyToClip"
-						onclick="corticon.util.copyToClipboard('#formDataId'); return false;"><i
-							class="bi bi-clipboard-plus"></i></a>
-				</td>
-			</tr>
-			<tr>
-				<td width="20%">
-					<textarea style="width: 100%; height: 300px;" id="decisionServiceInputId"></textarea>
-				</td>
-				<td width="40%">
-					<textarea style="width: 100%; height: 300px;" id="decisionServiceResultId"></textarea>
-				</td>
-				<td width="40%">
-					<textarea style="width: 100%; height: 300px;" id="formDataId"></textarea>
-				</td>
-			</tr>
-		</table>
-	</div>
+                            <details class="help-expander">
+                                <summary>UI Control Legend</summary>
+                                <ul class="compactList">
+                                    <li><span class="legendMark required">*</span> Required</li>
+                                    <li><span class="legendMark conditional">*</span> Conditionally required</li>
+                                    <li><span class="legendMark readonly">R</span> Read-only / derived</li>
+                                    <li><span class="legendMark validation">!</span> Validation message</li>
+                                    <li><span class="legendMark control">C</span> UI control rendered from rules</li>
+                                </ul>
+                            </details>
+
+                            <details class="help-expander">
+                                <summary>Provenance</summary>
+                                <div class="badgeRow">
+                                    <span class="provenance-badge rule-defined">Rule-defined</span>
+                                    <span class="provenance-badge user-entered">User-entered</span>
+                                    <span class="provenance-badge derived">Derived</span>
+                                    <span class="provenance-badge system-default">System/default</span>
+                                </div>
+                                <div class="smallNote" id="provenanceSummaryId">Waiting for stage render...</div>
+                            </details>
+
+                            <details class="help-expander">
+                                <summary>Explainability Hooks</summary>
+                                <ul id="explainabilityListId" class="compactList">
+                                    <li>Start a sample to see stage-specific explainability hints.</li>
+                                </ul>
+                            </details>
+                        </div>
+                    </details>
+                </div>
+
+                <div id="dynUIContainerId" class="dynUIContainer">
+                    <h1>Rules Driven Dynamic Forms</h1>
+                    <div style="margin: 2rem;">
+                        In these samples the forms are generated on the fly based on rules from Corticon.js decision
+                        services. It shows how the decision service acts as the model for a generic form component.
+
+                        Questions can be conditionally asked based on inputs from previous questions and external data.
+                        The component can render the form with either simple HTML controls or KendoUI components.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="allTracesContainer screen-zone" id="traceZone">
+        <div class="zone-header">
+            <span>Decision Service Trace + Data Flow</span>
+            <details class="help-bubble">
+                <summary>?</summary>
+                <div class="help-content">
+                    Compare input, output, and accrued data to validate stage transitions and deterministic behavior.
+                </div>
+            </details>
+        </div>
+
+        <div class="trace-meta-bar">
+            <div class="trace-contract-inline" id="traceContractWidgetId">
+                <div class="metricRow">Stage Contract</div>
+                <ul id="stageContractListId" class="compactList"></ul>
+            </div>
+            <div class="trace-stage-counter">
+                <span>Current Stage: <strong id="contractStageId">-</strong></span>
+                <span id="traceHistorySummaryId"><i class="bi bi-journal-text"></i></span>
+            </div>
+        </div>
+
+        <div class="tracePanelTitle">Decision Service (Rules) Trace Panel</div>
+        <div class="stageTraceHistory" style="overflow-x: auto; overflow-y: hidden; padding: 0.8rem;">
+            <span style="margin-left: 0.6rem;" id="traceHistoryId"></span>
+        </div>
+        <table width="100%">
+            <tr>
+                <td>
+                    <i class="bi bi-arrow-down-right-square"></i>&nbsp;Input to Decision Service Call <a href="#"
+                        title="Copy to clipboard" class="copyToClip"
+                        onclick="corticon.util.copyToClipboard('#decisionServiceInputId'); return false;"><i
+                            class="bi bi-clipboard-plus"></i></a>
+                    <details class="help-bubble inline-help">
+                        <summary>?</summary>
+                        <div class="help-content">
+                            Outbound payload: controls + accrued domain data sent into the decision service.
+                        </div>
+                    </details>
+                </td>
+                <td>
+                    <i class="bi bi-arrow-up-left-square"></i>&nbsp;Results From Decision Service Call &nbsp;<span
+                        id="execTimeId"></span> <a href="#" title="Copy to clipboard" class="copyToClip"
+                        onclick="corticon.util.copyToClipboard('#decisionServiceResultId'); return false;"><i
+                            class="bi bi-clipboard-plus"></i></a>
+                    <details class="help-bubble inline-help">
+                        <summary>?</summary>
+                        <div class="help-content">
+                            Decision output drives next stage, rendered controls, and validation hints.
+                        </div>
+                    </details>
+                </td>
+                <td>
+                    <i class="bi bi-clipboard-data"></i>&nbsp;Accrued Form Data &nbsp;<a href="#"
+                        title="Copy to clipboard" class="copyToClip"
+                        onclick="corticon.util.copyToClipboard('#formDataId'); return false;"><i
+                            class="bi bi-clipboard-plus"></i></a>
+                    <details class="help-bubble inline-help">
+                        <summary>?</summary>
+                        <div class="help-content">
+                            Canonical application state persisted across stages for audit and deterministic replay.
+                        </div>
+                    </details>
+                </td>
+            </tr>
+            <tr>
+                <td width="20%">
+                    <textarea style="width: 100%; height: 300px;" id="decisionServiceInputId"></textarea>
+                </td>
+                <td width="40%">
+                    <textarea style="width: 100%; height: 300px;" id="decisionServiceResultId"></textarea>
+                </td>
+                <td width="40%">
+                    <textarea style="width: 100%; height: 300px;" id="formDataId"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="screen-zone" id="performanceWidgetZone">
+        <details class="widget-collapsible" id="performanceZone">
+            <summary>Performance</summary>
+            <div class="widget-content insight-card">
+                <div class="metricRow">Decision Exec: <strong id="perfDecisionMsId">-</strong> ms <span id="perfDecisionDeltaId" class="delta"></span></div>
+                <div class="metricRow">Render Time: <strong id="perfRenderMsId">-</strong> ms <span id="perfRenderDeltaId" class="delta"></span></div>
+                <div class="metricRow">Input Bytes: <strong id="perfInputBytesId">-</strong></div>
+                <div class="metricRow">Output Bytes: <strong id="perfOutputBytesId">-</strong></div>
+            </div>
+        </details>
+    </div>
 </body>
 
 </html>
